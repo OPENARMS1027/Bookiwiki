@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from django.shortcuts import render
-from .models import Book, Category
-from .serializers import BookSerializer, CategorySerializer
+from .models import Book, Category, Thread
+from .serializers import BookSerializer, CategorySerializer, ThreadSerializer
 
 
 @api_view(["GET", "POST"])
@@ -22,3 +22,11 @@ def category_list(request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
+
+@api_view(["GET"])
+def thread_list(request):
+    if request.method == "GET":
+        threads = Thread.objects.all()
+        serializer = ThreadSerializer(threads, many=True)
+        return Response(serializer.data)
+
