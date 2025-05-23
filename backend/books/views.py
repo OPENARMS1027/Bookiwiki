@@ -4,13 +4,21 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from django.shortcuts import render
-from .models import Book
-from .serializers import BookSerializer
+from .models import Book, Category
+from .serializers import BookSerializer, CategorySerializer
 
-@api_view(['GET', 'POST'])
+
+@api_view(["GET", "POST"])
 def book_list(request):
-    if request.method == 'GET':
+    if request.method == "GET":
         books = Book.objects.all()
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
-    
+
+
+@api_view(["GET"])
+def category_list(request):
+    if request.method == "GET":
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
