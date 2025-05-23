@@ -9,12 +9,19 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 from pathlib import Path
+#environ을 기존 import에 추가
+import environ
+import os
+env = environ.Env(DEBUG=(bool, False)) #환경변수를 불러올 수 있는 상태로 세팅
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#환경변수 파일 읽어오기
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+SECRET_KEY = env('SECRET_KEY') #SECERET_KEY 값 불러오기
+DEBUG = env('DEBUG') #DEBUG 값 불러오기
+from pathlib import Path
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
