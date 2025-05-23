@@ -4,6 +4,7 @@ import axios from "axios";
 export const useBookStore = defineStore("book", () => {
   const books = ref([]);
   const categories = ref([]);
+  const threads = ref([]);
 
   const getBooks = () => {
     axios({
@@ -25,5 +26,15 @@ export const useBookStore = defineStore("book", () => {
     });
   };
 
-  return { books, categories, getBooks, getCategories };
+
+  const getThreads = () => {
+    axios({
+      method: "GET",
+      url: "http://localhost:8000/threads/",
+    }).then((response) => {
+      threads.value = response.data;
+      console.log(response.data);
+    });
+  };
+  return { books, categories, getBooks, getCategories, threads, getThreads };
 });
