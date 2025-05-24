@@ -7,18 +7,17 @@
           <p class="title-author">
             <strong>{{ book.title }}</strong> | {{ book.author }} | {{ book.pub_date }}
           </p>
-          <p class="subtitle">{{ book.subTitle }}</p>
         </div>
       </div>
     </div>
   </template>
   
   <script setup>
-//   import '@/style/ThreadWrite/ThreadForm.css'
-
+  import '@/style/ThreadWrite/ThreadForm.css'
   const props = defineProps({
     book: Object,
   });
+
   </script>
   
   <style scoped>

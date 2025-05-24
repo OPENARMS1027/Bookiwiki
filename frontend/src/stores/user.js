@@ -24,7 +24,7 @@ export const useUserStore = defineStore(
         .then((res) => {
           console.log('회원가입 성공')
           router.push({ name: 'login' })
-        })
+        }) 
         .catch((err) => {
           console.log(err)
         })
