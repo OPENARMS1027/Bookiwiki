@@ -1,40 +1,49 @@
-import { ref, computed } from "vue";
-import { defineStore } from "pinia";
-import axios from "axios";
-export const useBookStore = defineStore("book", () => {
-  const books = ref([]);
-  const categories = ref([]);
-  const threads = ref([]);
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import axios from 'axios'
+
+export const useBookStore = defineStore('book', () => {
+  const books = ref([])
+  const categories = ref([])
+  const threads = ref([])
 
   const getBooks = () => {
     axios({
-      method: "GET",
-      url: "http://localhost:8000/books/",
-    }).then((response) => {
-      books.value = response.data;
-      console.log(response.data);
-    });
-  };
+      method: 'GET',
+      url: 'http://localhost:8000/books/',
+    })
+      .then((response) => {
+        // console.log(response.data)
+        books.value = response.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   const getCategories = () => {
     axios({
-      method: "GET",
-      url: "http://localhost:8000/categories/",
-    }).then((response) => {
-      categories.value = response.data;
-      console.log(response.data);
-    });
-  };
-
+      url: 'http://localhost:8000/categories/',
+      method: 'GET',
+    })
+      .then((response) => {
+        // console.log(response.data)
+        categories.value = response.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   const getThreads = () => {
     axios({
-      method: "GET",
-      url: "http://localhost:8000/threads/",
+      method: 'GET',
+      url: 'http://localhost:8000/threads/',
     }).then((response) => {
-      threads.value = response.data;
-      console.log(response.data);
-    });
-  };
-  return { books, categories, getBooks, getCategories, threads, getThreads };
-});
+      // console.log(response.data)
+      threads.value = response.data
+    })
+  }
+
+  return { books, getBooks, categories, getCategories, threads, getThreads }
+})
