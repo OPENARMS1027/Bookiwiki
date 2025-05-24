@@ -43,9 +43,13 @@ def book_detail(request, book_id):
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
-@api_view(["GET"])
+@api_view(["GET", "DELETE"])
 def thread_detail(request, thread_id):
+    thread = Thread.objects.get(id=thread_id)
     if request.method == "GET":
-        thread = Thread.objects.get(id=thread_id)
         serializer = ThreadSerializer(thread)
         return Response(serializer.data)
+    elif request.method == "DELETE":
+        thread.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
