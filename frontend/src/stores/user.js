@@ -44,7 +44,22 @@ export const useUserStore = defineStore(
         })
         .catch((err) => console.log(err))
     }
-    return { signup, token, login, isLogin }
+
+    const getUser = (userId) => {
+      return axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/user/${userId}/`,
+      })
+        .then((response) => {
+          // console.log(response.data)
+          return response.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    return { signup, token, login, isLogin, getUser }
   },
   { persist: true }
 )
