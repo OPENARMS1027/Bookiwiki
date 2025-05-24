@@ -45,5 +45,24 @@ export const useBookStore = defineStore('book', () => {
     })
   }
 
-  return { books, getBooks, categories, getCategories, threads, getThreads }
+  const getBook = async (bookId) => {
+    await getBooks()
+    return books.value.find((book) => book.id === bookId)
+  }
+
+  const getThread = async (threadId) => {
+    await getThreads()
+    return threads.value.find((thread) => thread.id === threadId)
+  }
+
+  return {
+    books,
+    getBooks,
+    categories,
+    getCategories,
+    threads,
+    getThreads,
+    getBook,
+    getThread,
+  }
 })
