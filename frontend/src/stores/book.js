@@ -45,14 +45,32 @@ export const useBookStore = defineStore('book', () => {
     })
   }
 
-  const getBook = async (bookId) => {
-    await getBooks()
-    return books.value.find((book) => book.id === bookId)
+  const getBook = (bookId) => {
+    return axios({
+      method: 'get',
+      url: `http://localhost:8000/books/${bookId}/`,
+    })
+      .then((response) => {
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+        throw err
+      })
   }
 
-  const getThread = async (threadId) => {
-    await getThreads()
-    return threads.value.find((thread) => thread.id === threadId)
+  const getThread = (threadId) => {
+    return axios({
+      method: 'get',
+      url: `http://localhost:8000/threads/${threadId}/`,
+    })
+      .then((response) => {
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+        throw err
+      })
   }
 
   return {
