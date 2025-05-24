@@ -4,7 +4,7 @@
       <BookInfo v-if="book" :book="book" />
     </div>
     <div class="thread-info">
-      <ThreadInfo v-if="thread" :thread="thread" />
+      <ThreadInfo v-if="thread?.book" :thread="thread" />
     </div>
   </div>
 </template>
@@ -32,11 +32,11 @@ async function fetchData(threadId) {
 }
 
 onMounted(() => {
-  fetchData(Number(route.params.threadId))
+  fetchData(threadId)
 })
 
 watch(
-  () => route.params.threadId,
+  () => threadId,
   (newThreadId) => {
     fetchData(Number(newThreadId))
   }
