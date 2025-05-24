@@ -1,6 +1,8 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from books.models import Category
+from books.serializers import CategorySerializer, BookSerializer
+from django.contrib.auth import get_user_model
 
 class CustomRegisterSerializer(RegisterSerializer):
     username = serializers.CharField(required=True)
@@ -41,8 +43,20 @@ class CustomRegisterSerializer(RegisterSerializer):
 
         user.save()
 
-        # M2M 필드는 save 후에 set
         interested_category = self.validated_data.get('interested_category', [])
         user.interested_category.set(interested_category)
 
         return user
+
+
+User = get_user_model()
+class UserSerializer(serializers.ModelSerializer):            
+    interested_category = CategorySerializer(many=True)
+    books = BookSerializer(many=True)
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'gender', 'age',
+            'week_avg_time', 'year_avg_time',
+            'profile_img', 'interested_category', 'books',
+        ]
