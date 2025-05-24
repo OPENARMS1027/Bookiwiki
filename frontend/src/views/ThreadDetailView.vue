@@ -1,7 +1,7 @@
 <template>
   <div>
-    <BookInfo :book="book" />
-    <ThreadInfo :thread="thread" />
+    <BookInfo v-if="book" :book="book" />
+    <ThreadInfo v-if="thread" :thread="thread" />
   </div>
 </template>
 
@@ -20,6 +20,8 @@ const thread = ref(null)
 const book = ref(null)
 
 onMounted(async () => {
+  await store.getBooks()
+
   thread.value = await store.getThread(threadId)
   if (thread.value) {
     book.value = await store.getBook(thread.value.book.id)
