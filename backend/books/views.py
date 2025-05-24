@@ -38,3 +38,9 @@ def thread_list(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+@api_view(["GET"])
+def book_detail(request, book_id):
+    if request.method == "GET":
+        book = Book.objects.get(id=book_id)
+        serializer = BookSerializer(book)
+        return Response(serializer.data)
