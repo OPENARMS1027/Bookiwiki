@@ -2,8 +2,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-
-from django.shortcuts import render
 from .models import Book, Category, Thread
 from .serializers import BookSerializer, CategorySerializer, ThreadSerializer
 
@@ -43,4 +41,11 @@ def book_detail(request, book_id):
     if request.method == "GET":
         book = Book.objects.get(id=book_id)
         serializer = BookSerializer(book)
+        return Response(serializer.data)
+
+@api_view(["GET"])
+def thread_detail(request, thread_id):
+    if request.method == "GET":
+        thread = Thread.objects.get(id=thread_id)
+        serializer = ThreadSerializer(thread)
         return Response(serializer.data)
