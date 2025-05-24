@@ -1,0 +1,53 @@
+.wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.description {
+  margin-bottom: 2rem;
+  color: white;
+  text-align: center;
+}
+
+.thread-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  text-align: left; /* 내부 카드 텍스트 정렬 */
+}
+
+.thread-list-item {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #fafafa;
+  transition: box-shadow 0.3s;
+}
+
+.thread-list-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.thread-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: black;
+}
+
+.thread-content {
+  color: #444;
+}

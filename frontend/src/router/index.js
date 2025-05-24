@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import LandingView from '@/views/LandingView.vue'
 import BooksListView from '@/views/BooksListView.vue'
 import ThreadsListView from '@/views/ThreadsListView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -7,14 +8,12 @@ import SignUpView from '@/views/SignUpView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/books',
-      component: BooksListView,
-    },
-    {
-      path: '/threads',
-      component: ThreadsListView,
-    },
+    { path: '/', name: 'main', component: LandingView },
+    { path: '/threads', name: 'threadList', component: ThreadsListView },
+    { path: '/threads/:threadId', name: 'threadDetail', component: '' },
+    { path: '/books', name: 'bookList', component: BooksListView },
+    { path: '/books/:bookId', name: 'bookDetail', component: '' },
+    { path: '/mypage', name: 'myPage', component: '' },
     {
       path: '/login',
       name: 'login',
