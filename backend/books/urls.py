@@ -7,4 +7,5 @@ urlpatterns = [
     path("categories/", views.category_list),
     path("threads/", views.thread_list),
     path("threads/<int:thread_id>/", views.thread_detail),
+    path("threads/<int:thread_id>/likes/", views.thread_likes),
 ]

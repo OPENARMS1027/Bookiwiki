@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Book, Category, Thread
-from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer
+from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer, ThreadLikesSerializer
 
 
 @api_view(["GET", "POST"])
@@ -57,4 +57,14 @@ def thread_detail(request, thread_id):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
-        
+
+@api_view(["POST"])  
+@permission_classes([IsAuthenticated])
+def thread_likes(request, thread_id):
+    thread = Thread.objects.get(pk=thread_id)
+    if request.user in thread.likes.all():
+        thread.likes.remove(request.user)
+    else:
+        thread.likes.add(request.user)
+    serializer = ThreadSerializer(thread, context={'request': request})
+    return Response(serializer.data)
