@@ -7,7 +7,7 @@
 
     <div v-else class="thread-info">
       <div class="thread-actions">
-        <button @click="">삭제</button>
+        <button @click="onThreadDelete(thread.id)">삭제</button>
         <button @click="">수정</button>
       </div>
       <div class="thread-user">
@@ -44,9 +44,13 @@ const props = defineProps({
 })
 
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useBookStore } from '@/stores/book'
 
+const router = useRouter()
 const userStore = useUserStore()
+const bookStore = useBookStore()
 const user = ref(null)
 
 watch(
@@ -60,6 +64,11 @@ watch(
   },
   { immediate: true }
 )
+
+const onThreadDelete = async (threadId) => {
+  await bookStore.deleteThread(threadId)
+  router.push({ name: 'threadList' })
+}
 </script>
 
 <style scoped>

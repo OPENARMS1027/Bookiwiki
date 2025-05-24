@@ -14,6 +14,11 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ThreadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Thread
+        fields = '__all__'
+
+class ThreadDetailSerializer(serializers.ModelSerializer):
     book = BookSerializer()
     class Meta:
         model = Thread

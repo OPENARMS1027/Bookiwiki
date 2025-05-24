@@ -11,17 +11,26 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useBookStore } from '@/stores/book.js'
 import ThreadItem from '@/components/ThreadList/ThreadItem.vue'
 import '@/style/ThreadsList/ThreadList.css'
 
+const route = useRoute()
 const store = useBookStore()
 const threads = computed(() => store.threads)
 
 onMounted(() => {
   store.getThreads()
 })
+
+watch(
+  () => route.fullPath,
+  () => {
+    store.getThreads()
+  }
+)
 </script>
 
 <style scoped></style>

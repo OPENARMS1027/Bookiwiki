@@ -73,6 +73,18 @@ export const useBookStore = defineStore('book', () => {
       })
   }
 
+  const deleteThread = (threadId) => {
+    axios({
+      method: 'delete',
+      url: `http://localhost:8000/threads/${threadId}/`,
+    })
+      .then((response) => {
+        console.log('삭제 성공')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   return {
     books,
     getBooks,
@@ -82,5 +94,6 @@ export const useBookStore = defineStore('book', () => {
     getThreads,
     getBook,
     getThread,
+    deleteThread,
   }
 })

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Book, Category, Thread
-from .serializers import BookSerializer, CategorySerializer, ThreadSerializer
+from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer
 
 
 @api_view(["GET", "POST"])
@@ -43,13 +43,18 @@ def book_detail(request, book_id):
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
-@api_view(["GET", "DELETE"])
+@api_view(["GET", "DELETE", "PUT"])
 def thread_detail(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
     if request.method == "GET":
-        serializer = ThreadSerializer(thread)
+        serializer = ThreadDetailSerializer(thread)
         return Response(serializer.data)
     elif request.method == "DELETE":
         thread.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == "PUT":
+        serializer = ThreadSerializer(thread, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
         
