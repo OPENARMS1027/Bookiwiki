@@ -1,8 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useUserStore } from '@/stores/user.js'
 
 export const useBookStore = defineStore('book', () => {
+  const userStore = useUserStore()
   const books = ref([])
   const categories = ref([])
   const threads = ref([])
@@ -45,5 +47,72 @@ export const useBookStore = defineStore('book', () => {
     })
   }
 
-  return { books, getBooks, categories, getCategories, threads, getThreads }
+  const getBook = (bookId) => {
+    return axios({
+      method: 'get',
+      url: `http://localhost:8000/books/${bookId}/`,
+    })
+      .then((response) => {
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+        throw err
+      })
+  }
+
+  const getThread = (threadId) => {
+    return axios({
+      method: 'get',
+      url: `http://localhost:8000/threads/${threadId}/`,
+    })
+      .then((response) => {
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+        throw err
+      })
+  }
+
+  const deleteThread = (threadId) => {
+    axios({
+      method: 'delete',
+      url: `http://localhost:8000/threads/${threadId}/`,
+    })
+      .then((response) => {
+        console.log('삭제 성공')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const likesThread = (threadId) => {
+    axios({
+      method: 'post',
+      url: `http://127.0.0.1:8000/threads/${threadId}/likes/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+      .then((response) => {
+        // console.log(response)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+  return {
+    books,
+    getBooks,
+    categories,
+    getCategories,
+    threads,
+    getThreads,
+    getBook,
+    getThread,
+    deleteThread,
+    likesThread,
+  }
 })
