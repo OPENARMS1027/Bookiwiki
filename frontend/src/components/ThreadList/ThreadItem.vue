@@ -16,7 +16,7 @@
   </script>
   
   <style scoped>
-  .card {
+  /* .card {
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 16px;
@@ -54,6 +54,6 @@
     color: #555;
     text-align: center;
     margin-top: 8px;
-  }
+  } */
   </style>
   

@@ -1,4 +1,5 @@
 <template>
+  ddd
     <div class="book-info">
       <h3>도서 정보</h3>
       <div class="book-details">
@@ -13,10 +14,16 @@
   </template>
   
   <script setup>
-  import '@/style/ThreadWrite/ThreadForm.css'
-  const props = defineProps({
-    book: Object,
-  });
+  import { ref } from 'vue'
+  import { useBookStore } from '@/stores/book'
+  defineProps({
+    bookId: String,
+  })
+  const book = ref(null)
+  const store = useBookStore()
+  const bookData = await store.getBook(bookId)
+  book.value = bookData
+
 
   </script>
   

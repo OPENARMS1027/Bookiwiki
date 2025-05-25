@@ -76,7 +76,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.wrapper {
+/* .wrapper {
     display: flex;
     background-color: rgb(30, 30, 30);
     min-height: 100vh;
@@ -118,5 +118,5 @@ onMounted(() => {
   
   .book-main > div {
     width: 100%;
-  }
+  } */
 </style>

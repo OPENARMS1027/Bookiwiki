@@ -66,7 +66,7 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
-.container {
+/* .container {
     width: 70%;
     margin: 20px 0;
 }
@@ -124,6 +124,6 @@ const formatDate = (dateString) => {
 
 .date {
     margin-left: auto;
-}
+} */
 </style>
   

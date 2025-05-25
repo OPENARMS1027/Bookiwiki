@@ -31,7 +31,7 @@ const moveToDetail = (bookId) => {
 </script>
 
 <style scoped>
-.book-card {
+/* .book-card {
     display: flex;
     align-items: center;
     background-color: rgb(46, 46, 46);
@@ -69,5 +69,5 @@ const moveToDetail = (bookId) => {
   
   .book-subtitle {
     color: rgb(139, 137, 132);
-  }
+  } */
 </style>

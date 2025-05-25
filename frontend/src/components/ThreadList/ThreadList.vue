@@ -24,7 +24,7 @@
   </script>
   
   <style scoped>
-  .card-container {
+  /* .card-container {
     padding-left: 50px;
     padding-right: 50px;
     display: flex;
@@ -52,6 +52,6 @@
   
   .card-item a:hover {
     color: #40a9ff; 
-  }
+  } */
   </style>
   

@@ -8,6 +8,7 @@ export const useUserStore = defineStore(
   () => {
     const token = ref('')
     const router = useRouter()
+    const thisUser = ref(null) // 현재 로그인한 유저
     const isLogin = computed(() => {
       return token.value ? true : false
     })
@@ -24,7 +25,7 @@ export const useUserStore = defineStore(
         .then((res) => {
           console.log('회원가입 성공')
           router.push({ name: 'login' })
-        }) 
+        })
         .catch((err) => {
           console.log(err)
         })
@@ -44,7 +45,68 @@ export const useUserStore = defineStore(
         })
         .catch((err) => console.log(err))
     }
-    return { signup, token, login, isLogin }
+
+    const getUser = (userId) => {
+      return axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/user/${userId}/`,
+      })
+        .then((response) => {
+          // console.log(response.data)
+          return response.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    const getThisUser = () => {
+      if (token.value) {
+        axios({
+          method: 'get',
+          url: 'http://127.0.0.1:8000/user/me/',
+          headers: {
+            Authorization: `Token ${token.value}`,
+          },
+        })
+          .then((response) => {
+            thisUser.value = response.data
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }
+
+    const followUser = (userId) => {
+      if (token.value) {
+        return axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/user/follow/${userId}/`,
+          headers: {
+            Authorization: `Token ${token.value}`,
+          },
+        })
+          .then((response) => {
+            console.log('팔로우 성공')
+            return response.data
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }
+
+    return {
+      signup,
+      token,
+      login,
+      isLogin,
+      getUser,
+      getThisUser,
+      thisUser,
+      followUser,
+    }
   },
   { persist: true }
 )

@@ -5,7 +5,7 @@ from rest_framework import status
 
 from django.shortcuts import render
 from .models import Book, Category, Thread
-from .serializers import BookSerializer, CategorySerializer, ThreadSerializer
+from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadCreateSerializer
 
 
 @api_view(["GET", "POST"])
@@ -32,9 +32,8 @@ def thread_list(request):
         return Response(serializer.data)
     
     elif request.method == "POST":
-        serializer = ThreadSerializer(data=request.data)
+        serializer = ThreadCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            # 프론트엔드에서 user 정보를 함께 전송하면 됩니다
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -51,15 +50,12 @@ def add_to_user_books(request):
     try:
         book = Book.objects.get(id=request.data.get('book_id'))
         user = request.user
-
-        # 이미 서재에 있는지 확인
         if user.books.filter(id=book.id).exists():
             return Response(
                 {'message': 'already_exists'}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # 서재에 추가
         user.books.add(book)
         return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
 

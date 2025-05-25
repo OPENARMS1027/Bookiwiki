@@ -8,6 +8,7 @@ export const useBookStore = defineStore('book', () => {
   const books = ref([])
   const categories = ref([])
   const threads = ref([])
+  const newThread = ref({})
 
   const getBooks = () => {
     axios({
@@ -103,6 +104,25 @@ export const useBookStore = defineStore('book', () => {
         console.log(err)
       })
   }
+
+  const writeThread = async (threadData) => {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8000/threads/',
+        data: threadData,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${userStore.token}`
+        }
+      })
+      return response.data.id 
+    } catch (error) {
+      // console.error('스레드 생성 오류:', error.response?.data || error)
+      throw error
+    }
+  }
+
   return {
     books,
     getBooks,
@@ -114,5 +134,7 @@ export const useBookStore = defineStore('book', () => {
     getThread,
     deleteThread,
     likesThread,
+    newThread,
+    writeThread
   }
 })

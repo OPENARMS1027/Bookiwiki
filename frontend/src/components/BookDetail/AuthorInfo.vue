@@ -21,7 +21,7 @@
   </script>
   
   <style scoped>
-  .header {
+  /* .header {
     display: flex;
     flex-direction: row;
     width: 70%;
@@ -51,6 +51,6 @@
   
   .author-text {
     padding: 20px;
-  }
+  } */
   </style>
   
