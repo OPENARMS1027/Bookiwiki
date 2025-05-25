@@ -53,10 +53,27 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):            
     interested_category = CategorySerializer(many=True)
     books = BookSerializer(many=True)
+    followers_count = serializers.SerializerMethodField()
+    followings_count = serializers.SerializerMethodField()
+    is_followed = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
             'id', 'username', 'gender', 'age',
             'week_avg_time', 'year_avg_time',
             'profile_img', 'interested_category', 'books',
+            'followers_count', 'followings_count', 'is_followed',
         ]
+    
+    def get_followers_count(self, obj):
+        return obj.followers.count()
+    
+    def get_followings_count(self, obj):
+        return obj.followings.count()
+    
+    def get_is_followed(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.followers.filter(pk=request.user.pk).exists()
+        return False
