@@ -18,7 +18,25 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
-import '@/styles/Layout/Navigation.css'
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  background-color: #327729;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.container a {
+  text-decoration: none;
+  color: white;
+}
+
+.container a:hover {
+  text-decoration: underline;
+}
+</style>

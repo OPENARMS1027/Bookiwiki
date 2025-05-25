@@ -21,7 +21,6 @@
 import { ref, onMounted } from 'vue'
 import { useBookStore } from '@/stores/book.js'
 import { RouterLink } from 'vue-router'
-import '@/styles/Landing/BestSeller.css'
 
 const store = useBookStore()
 const bestSellers = ref([])
@@ -35,4 +34,42 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.best-seller-container {
+  display: flex;
+}
+
+.best-seller-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  width: 150px;
+}
+
+.best-seller-img {
+  width: 100px;
+  height: 150px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.best-seller-title {
+  width: 120px;
+  min-width: 0;
+  line-height: 25px;
+  text-align: center;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.best-seller-item a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 450;
+  cursor: pointer;
+}
+</style>

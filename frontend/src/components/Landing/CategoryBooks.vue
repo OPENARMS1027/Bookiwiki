@@ -12,10 +12,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useBookStore } from '@/stores/book.js'
-import '@/styles/Landing/CategoryBooks.css'
 
 const router = useRouter()
 const store = useBookStore()
@@ -30,4 +29,27 @@ const moveToBookList = (categoryId) => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.button-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.genre-button {
+  all: unset;
+  padding: 0.5rem 1.2rem;
+  background-color: #327729;
+  color: white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.genre-button:hover {
+  background-color: #27601f;
+  transform: translateY(-2px);
+}
+</style>

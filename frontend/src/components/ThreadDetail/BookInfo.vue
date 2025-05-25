@@ -20,7 +20,26 @@ defineProps({
 })
 
 import { RouterLink } from 'vue-router'
-import '@/styles/ThreadDetail/BookInfo.css'
 </script>
 
-<style scoped></style>
+<style scoped>
+.book-info-container {
+  display: flex;
+  padding: 15px;
+}
+
+.book-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+
+.book-title {
+  color: black;
+}
+
+a {
+  text-decoration: none;
+}
+</style>
