@@ -2,9 +2,14 @@
   <div class="wrapper">
     <div class="book-info">
       <BookInfo v-if="book" :book="book" />
+      <Comment :threadId="threadId" />
     </div>
     <div class="thread-info">
-      <ThreadInfo v-if="thread" :thread="thread" @update-thread="updateThread" />
+      <ThreadInfo
+        v-if="thread"
+        :thread="thread"
+        @update-thread="updateThread"
+      />
     </div>
   </div>
 </template>
@@ -15,6 +20,7 @@ import { useRoute } from 'vue-router'
 import { useBookStore } from '@/stores/book.js'
 import BookInfo from '@/components/ThreadDetail/BookInfo.vue'
 import ThreadInfo from '@/components/ThreadDetail/ThreadInfo.vue'
+import Comment from '@/components/ThreadDetail/Comment.vue'
 
 const route = useRoute()
 const store = useBookStore()
@@ -33,14 +39,14 @@ async function fetchData(threadId) {
       book.value = bookData
     }
   } catch (error) {
-    console.error( error)
+    console.error(error)
   }
 }
 
 const updateThread = (updatedThread) => {
   thread.value = {
     ...thread.value,
-    ...updatedThread
+    ...updatedThread,
   }
 }
 
@@ -60,10 +66,10 @@ watch(
 
 <style scoped>
 .book-info {
-  width: 30%;
+  width: 35%;
 }
 
 .thread-info {
-  width: 70%;
+  width: 65%;
 }
 </style>

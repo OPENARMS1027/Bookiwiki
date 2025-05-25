@@ -77,7 +77,7 @@ def comment_list(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
     
     if request.method == "GET":
-        comments = Comment.objects.filter(thread=thread)
+        comments = Comment.objects.filter(thread=thread).order_by('-created_at')
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
     
