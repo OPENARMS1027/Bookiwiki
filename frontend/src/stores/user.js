@@ -78,7 +78,35 @@ export const useUserStore = defineStore(
       }
     }
 
-    return { signup, token, login, isLogin, getUser, getThisUser, thisUser }
+    const followUser = (userId) => {
+      if (token.value) {
+        return axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/user/follow/${userId}/`,
+          headers: {
+            Authorization: `Token ${token.value}`,
+          },
+        })
+          .then((response) => {
+            console.log('팔로우 성공')
+            return response.data
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }
+
+    return {
+      signup,
+      token,
+      login,
+      isLogin,
+      getUser,
+      getThisUser,
+      thisUser,
+      followUser,
+    }
   },
   { persist: true }
 )

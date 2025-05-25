@@ -13,7 +13,14 @@
       <div class="thread-user">
         <span class="author">
           {{ user.username }}
-          <button class="follow-btn">팔로우</button>
+          <button 
+            v-if="showFollowButton" 
+            class="follow-btn"
+            :class="{ 'following': isFollowing }"
+            @click="handleFollow"
+          >
+            {{ isFollowing ? '팔로잉' : '팔로우' }}
+          </button>
         </span>
         <div v-if="user.profile_img">
           <img :src="user.profile_img" alt="user_profile_img" />
@@ -60,6 +67,11 @@ const userStore = useUserStore()
 const bookStore = useBookStore()
 const user = ref(null)
 const emit = defineEmits(['update-thread'])
+const isFollowing = ref(false)
+
+const showFollowButton = computed(() => {
+  return userStore.thisUser && user.value && userStore.thisUser.id !== user.value.id
+})
 
 const isLiked = computed(() => {
   return userStore.thisUser && props.thread.likes.includes(userStore.thisUser.id)
@@ -73,7 +85,9 @@ watch(
   () => props.thread?.user,
   async (newUser) => {
     if (newUser) {
-      user.value = await userStore.getUser(newUser)
+      const userData = await userStore.getUser(newUser)
+      user.value = userData
+      isFollowing.value = userData.is_followed
     } else {
       user.value = null
     }
@@ -115,6 +129,19 @@ const handleThreadLikes = async () => {
   } catch (error) {
     console.error('좋아요 업데이트 실패:', error)
     emit('update-thread', props.thread)
+  }
+}
+
+const handleFollow = async () => {
+  try {
+    const response = await userStore.followUser(user.value.id)
+    if (response) {
+      isFollowing.value = response.is_followed
+      const updatedUser = await userStore.getUser(user.value.id)
+      user.value = updatedUser
+    }
+  } catch (err) {
+    console.error(err)
   }
 }
 
