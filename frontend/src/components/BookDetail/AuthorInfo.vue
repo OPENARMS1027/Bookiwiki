@@ -14,7 +14,6 @@
   
   <script setup>
   import { ref } from 'vue'
-  import { defineProps } from 'vue'
   import '@/styles/BookDetail/AuthorInfo.css'
   const props = defineProps({
     book: Object,

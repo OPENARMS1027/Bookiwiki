@@ -18,7 +18,6 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { defineProps } from "vue";
 import '@/style/BooksList/BookCard.css'
 
 const props = defineProps({

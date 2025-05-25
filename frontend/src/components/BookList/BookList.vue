@@ -27,46 +27,53 @@
 
 <script setup>
 
-import { ref, computed, onMounted } from "vue";
-import { useBookStore } from "@/stores/book.js";
-import BookCard from "@/components/BookList/BookCard.vue";
+import { ref, computed, onMounted } from "vue"
+import { useRoute } from 'vue-router'
+import { useBookStore } from "@/stores/book.js"
+import BookCard from "@/components/BookList/BookCard.vue"
 import '@/style/BooksList/BookList.css'
 
-const store = useBookStore();
-const selectedCategory = ref(0); // '전체' 카테고리일 경우 0
-const categories = computed(() => store.categories);
+const route = useRoute()
+const store = useBookStore()
+const selectedCategory = ref(0) // '전체' 카테고리일 경우 0
+const categories = computed(() => store.categories)
 const searchText = ref('')
 
 // 카테고리 필터링된 책 목록
 const filteredBooks = computed(() => {
   if (selectedCategory.value === 0) {
-    return searchBooks.value;
+    return searchBooks.value
   }
 
   return searchBooks.value.filter(
     (book) => book.category === Number(selectedCategory.value)
-  );
-});
+  )
+})
 
 // 검색어로 필터링된 책 목록
 const searchBooks = computed(() => {
   if (!searchText.value) {
-    return store.books;
+    return store.books
   }
   return store.books.filter((book) =>
     book.title.toLowerCase().includes(searchText.value.toLowerCase()) ||
     book.author.toLowerCase().includes(searchText.value.toLowerCase())
-  );
-});
+  )
+})
 
 function onFilterCategory(categoryId) {
-  selectedCategory.value = categoryId;
+  selectedCategory.value = categoryId
 }
 
 onMounted(() => {
-  store.getBooks();
-  store.getCategories();
-});
+  store.getBooks()
+  store.getCategories()
+
+  const categoryFromQuery = route.query.category
+  if (categoryFromQuery) {
+    selectedCategory.value = Number(categoryFromQuery)
+  }
+})
 </script>
 
 <style scoped>
