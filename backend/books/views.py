@@ -109,3 +109,32 @@ def comment_detail(request, comment_id):
     elif request.method == "DELETE":
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_user_books(request):
+    try:
+        book = Book.objects.get(id=request.data.get('book_id'))
+        user = request.user
+
+        # 이미 서재에 있는지 확인
+        if user.books.filter(id=book.id).exists():
+            return Response(
+                {'message': 'already_exists'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 서재에 추가
+        user.books.add(book)
+        return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
+
+    except Book.DoesNotExist:
+        return Response(
+            {'message': 'book_not_found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'message': str(e)}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
