@@ -30,7 +30,6 @@
     import { useRouter } from 'vue-router'
     import { useUserStore } from '@/stores/user'
     import axios from 'axios'
-    import '@/styles/BookDetail/BookInfo.css'
     
     defineProps({
     book: Object,
@@ -84,5 +83,56 @@
   font-size: 14px;
   cursor: pointer;
 }
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 70%;
+    padding: 20px 0;
+  }
+  
+  .book-title {
+    font-weight: 600;
+    font-size: large;
+  }
+  
+  .thread-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .thread-button:hover {
+    text-decoration: underline;
+  }
+  
+  .book-image {
+    padding: 20px;
+    width: 30%;
+  }
+  
+  .book-info {
+    display: flex;
+    width: 70%;
+    background-color: white;
+  }
+  
+  img {
+    width: 130px;
+    height: auto;
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  .book-text {
+    padding: 20px;
+  }
+  .add-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
   </style>
   

@@ -14,7 +14,6 @@
   
   <script setup>
   import { ref } from 'vue'
-  import '@/styles/BookDetail/AuthorInfo.css'
   defineProps({
     book: Object,
   })
@@ -22,6 +21,36 @@
   </script>
   
   <style scoped>
+  .header {
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    padding: 20px 0;
+  }
   
+  .header-title {
+    font-weight: 600;
+    font-size: large;
+  }
+  
+  .author-title {
+    font-weight: 600;
+    font-size: medium;
+  }
+  
+  .author-image {
+    padding: 20px;
+    width: 30%;
+  }
+  
+  img {
+    border-radius: 50%;
+    width: 130px;
+    height: auto;
+  }
+  
+  .author-text {
+    padding: 20px;
+  }
   </style>
   
