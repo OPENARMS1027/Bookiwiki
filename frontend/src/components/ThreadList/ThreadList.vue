@@ -1,11 +1,11 @@
 <template>
   <div class="card-container">
     <div v-for="thread in threads" :key="thread.id" class="card-item">
-      <!-- <RouterLink
-          :to="{ name: 'threadsDetail', params: { threadId: thread.id } }"
-        > -->
-      <ThreadItem :thread="thread" />
-      <!-- </RouterLink> -->
+      <RouterLink
+        :to="{ name: 'threadDetail', params: { threadId: thread.id } }"
+      >
+        <ThreadItem :thread="thread" />
+      </RouterLink>
     </div>
   </div>
 </template>
