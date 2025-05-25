@@ -1,0 +1,82 @@
+div {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 24px 32px;
+    background-color: #2a2a3a; /* 어두운 딥 그레이 배경 */
+    border-radius: 12px;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.7),
+      inset 0 0 8px #1f1f2e;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  h3 {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #78aaff;
+    margin-bottom: 8px;
+    text-shadow: 0 0 5px #587fc5aa;
+  }
+  
+  input[type="text"],
+  input[type="date"],
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: #3c3c4f; /* 어두운 입력창 배경 */
+    color: #ddd;
+    font-size: 1rem;
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.15);
+    resize: vertical;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  input[type="text"]:focus,
+  input[type="date"]:focus,
+  textarea:focus {
+    outline: none;
+    box-shadow: 0 0 8px #78aaff;
+    background-color: #454559;
+  }
+  
+  div > div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  
+  button {
+    background-color: #587fc5;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 8px #587fc5aa;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #78aaff;
+    box-shadow: 0 0 12px #78aaffcc;
+  }
+  
+  button:first-child {
+    background-color: #555a72;
+    box-shadow: 0 0 8px #555a7288;
+  }
+  
+  button:first-child:hover {
+    background-color: #6a6f8f;
+    box-shadow: 0 0 12px #6a6f8fcc;
+  }
