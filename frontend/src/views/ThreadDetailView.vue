@@ -4,7 +4,7 @@
       <BookInfo v-if="book" :book="book" />
     </div>
     <div class="thread-info">
-      <ThreadInfo v-if="thread?.book" :thread="thread" />
+      <ThreadInfo v-if="thread" :thread="thread" @update-thread="updateThread" />
     </div>
   </div>
 </template>
@@ -24,11 +24,24 @@ const thread = ref(null)
 const book = ref(null)
 
 async function fetchData(threadId) {
-  const threadData = await store.getThread(threadId)
-  thread.value = threadData
+  try {
+    const threadData = await store.getThread(threadId)
+    thread.value = threadData
 
-  const bookData = await store.getBook(threadData.book.id)
-  book.value = bookData
+    if (threadData?.book?.id) {
+      const bookData = await store.getBook(threadData.book.id)
+      book.value = bookData
+    }
+  } catch (error) {
+    console.error( error)
+  }
+}
+
+const updateThread = (updatedThread) => {
+  thread.value = {
+    ...thread.value,
+    ...updatedThread
+  }
 }
 
 onMounted(() => {
@@ -38,7 +51,9 @@ onMounted(() => {
 watch(
   () => threadId,
   (newThreadId) => {
-    fetchData(Number(newThreadId))
+    if (newThreadId) {
+      fetchData(Number(newThreadId))
+    }
   }
 )
 </script>

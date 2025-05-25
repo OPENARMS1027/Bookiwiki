@@ -2,13 +2,13 @@
   <div>
     <div v-if="!props.thread || !user" class="loading-view">
       <font-awesome-icon :icon="['fas', 'spinner']" spin />
-      <span>로딩 중입니다...</span>
+      <span>로딩 중</span>
     </div>
 
     <div v-else class="thread-info">
       <div class="thread-actions">
-        <button @click="onThreadDelete(thread.id)">삭제</button>
-        <button @click="">수정</button>
+        <button @click="onThreadDelete(props.thread.id)">삭제</button>
+        <button @click="onThreadUpdate(props.thread.id)">수정</button>
       </div>
       <div class="thread-user">
         <span class="author">
@@ -25,8 +25,12 @@
       <div class="thread-header">
         <strong>{{ props.thread.title }}</strong>
         <p>
-          <span class="likes" @click="">♡</span>
-          <span> {{ props.thread.likes.length }}</span>
+          <div class="likes" v-if="isLiked" @click="handleThreadLikes"
+            ><font-awesome-icon :icon="['fas', 'heart']" />
+          </div>
+          <div class="likes" v-else @click="handleThreadLikes"
+          ><font-awesome-icon :icon="['far', 'heart']" /></div>
+          <span> {{ likesCount }}</span>
         </p>
       </div>
       <div class="thread-main">
@@ -40,10 +44,13 @@
 
 <script setup>
 const props = defineProps({
-  thread: Object,
+  thread: {
+    type: Object,
+    required: true
+  }
 })
 
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useBookStore } from '@/stores/book'
@@ -52,12 +59,21 @@ const router = useRouter()
 const userStore = useUserStore()
 const bookStore = useBookStore()
 const user = ref(null)
+const emit = defineEmits(['update-thread'])
+
+const isLiked = computed(() => {
+  return userStore.thisUser && props.thread.likes.includes(userStore.thisUser.id)
+})
+
+const likesCount = computed(() => {
+  return props.thread.likes.length
+})
 
 watch(
-  () => props.thread,
-  async (newThread) => {
-    if (newThread && newThread.user) {
-      user.value = await userStore.getUser(newThread.user)
+  () => props.thread?.user,
+  async (newUser) => {
+    if (newUser) {
+      user.value = await userStore.getUser(newUser)
     } else {
       user.value = null
     }
@@ -69,6 +85,42 @@ const onThreadDelete = async (threadId) => {
   await bookStore.deleteThread(threadId)
   router.push({ name: 'threadList' })
 }
+
+const onThreadUpdate = (threadId) => {
+  router.push({ name: 'threadWrite', query: { id: threadId, type: 'edit' } })
+}
+
+const handleThreadLikes = async () => {
+  if (!userStore.thisUser) return
+  
+  try {
+    const userId = userStore.thisUser.id
+    const currentLikes = [...props.thread.likes]
+    const index = currentLikes.indexOf(userId)
+    
+    if (index === -1) {
+      currentLikes.push(userId)
+    } else {
+      currentLikes.splice(index, 1)
+    }
+
+    emit('update-thread', {
+      ...props.thread,
+      likes: currentLikes
+    })
+
+    const updatedThread = await bookStore.likesThread(props.thread.id)
+    
+    emit('update-thread', updatedThread)
+  } catch (error) {
+    console.error('좋아요 업데이트 실패:', error)
+    emit('update-thread', props.thread)
+  }
+}
+
+onMounted(() => {
+  userStore.getThisUser()
+})
 </script>
 
 <style scoped>
@@ -105,6 +157,10 @@ const onThreadDelete = async (threadId) => {
   display: flex;
   justify-content: space-between;
   padding: 10px;
+}
+
+.likes{
+  cursor: pointer;
 }
 
 .thread-content {
