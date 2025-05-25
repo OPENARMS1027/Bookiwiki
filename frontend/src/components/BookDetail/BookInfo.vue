@@ -43,44 +43,9 @@ defineProps({
 const router = useRouter()
 const userStore = useUserStore()
 
+// console.log(book)
 // 스레드 생성 페이지 이동
 const moveToThread = (bookId) => {
-  router.push({ name: 'threadForm', params: { bookId: bookId } })
-}
-
-// 서재에 담기 버튼 함수
-// const moveToAdd = async (bookId) => {
-//   try {
-//     // 서재에 책 추가 API 호출
-//     await axios.post(
-//       'http://127.0.0.1:8000/books/userbooks/',
-//       {
-//         book_id: bookId,
-//       },
-//       {
-//         headers: {
-//           Authorization: `Token ${userStore.token}`,
-//         },
-//       }
-//     )
-
-//     // 성공 알림
-//     alert('내 서재에 저장되었습니다')
-//   } catch (error) {
-//     if (
-//       error.response?.status === 400 &&
-//       error.response?.data?.message === 'already_exists'
-//     ) {
-//       alert('이미 서재에 존재하는 책입니다')
-//     } else {
-//       console.error('서재 담기 실패:', error)
-//       alert('서재 담기에 실패했습니다')
-//     }
-//   }
-// }
-
-// 서재에 담기 버튼 함수
-const moveToAdd = async (bookId) => {
   if (!userStore.isLogin) {
     alert('로그인이 필요한 서비스입니다.')
     // 현재 페이지의 경로를 쿼리 파라미터로 같이 보내주기
@@ -90,8 +55,13 @@ const moveToAdd = async (bookId) => {
     })
     return
   }
+  router.push({ name: 'threadsForm', params: { bookId: bookId } })
+}
 
+// 서재에 담기 버튼 함수
+const moveToAdd = async (bookId) => {
   try {
+    // 서재에 책 추가 API 호출
     await axios.post(
       'http://127.0.0.1:8000/books/userbooks/',
       {
@@ -103,6 +73,8 @@ const moveToAdd = async (bookId) => {
         },
       }
     )
+
+    // 성공 알림
     alert('내 서재에 저장되었습니다')
   } catch (error) {
     if (
@@ -116,6 +88,44 @@ const moveToAdd = async (bookId) => {
     }
   }
 }
+
+// 서재에 담기 버튼 함수
+// const moveToAdd = async (bookId) => {
+//   if (!userStore.isLogin) {
+//     alert('로그인이 필요한 서비스입니다.')
+//     // 현재 페이지의 경로를 쿼리 파라미터로 같이 보내주기
+//     router.push({
+//       name: 'login',
+//       query: { redirect: router.currentRoute.value.fullPath },
+//     })
+//     return
+//   }
+
+//   try {
+//     await axios.post(
+//       'http://127.0.0.1:8000/books/userbooks/',
+//       {
+//         book_id: bookId,
+//       },
+//       {
+//         headers: {
+//           Authorization: `Token ${userStore.token}`,
+//         },
+//       }
+//     )
+//     alert('내 서재에 저장되었습니다')
+//   } catch (error) {
+//     if (
+//       error.response?.status === 400 &&
+//       error.response?.data?.message === 'already_exists'
+//     ) {
+//       alert('이미 서재에 존재하는 책입니다')
+//     } else {
+//       console.error('서재 담기 실패:', error)
+//       alert('서재 담기에 실패했습니다')
+//     }
+//   }
+// }
 </script>
 
 <style scoped>
