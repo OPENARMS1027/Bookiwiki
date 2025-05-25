@@ -31,7 +31,6 @@ import { ref, computed, onMounted } from "vue"
 import { useRoute } from 'vue-router'
 import { useBookStore } from "@/stores/book.js"
 import BookCard from "@/components/BookList/BookCard.vue"
-import '@/style/BooksList/BookList.css'
 
 const route = useRoute()
 const store = useBookStore()
@@ -77,4 +76,47 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.wrapper {
+    display: flex;
+    background-color: rgb(30, 30, 30);
+    min-height: 100vh;
+  }
+  
+  .book-aside {
+    width: 20%;
+  }
+  
+  .category-button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+  }
+  
+  .category-button:hover {
+    color: #ff3c3c;
+  }
+  
+  .category-button.selected {
+    color: #ff3c3c;
+    font-weight: bold;
+    border-left: 3px solid #ff3c3c;
+    padding-left: 7px;
+  }
+  
+  .book-main {
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: min-content;
+    gap: 0;
+    align-items: start;
+  }
+  
+  .book-main > div {
+    width: 100%;
+  }
 </style>
