@@ -8,6 +8,7 @@ export const useBookStore = defineStore('book', () => {
   const books = ref([])
   const categories = ref([])
   const threads = ref([])
+  const comments = ref([])
 
   const getBooks = () => {
     axios({
@@ -41,6 +42,9 @@ export const useBookStore = defineStore('book', () => {
     axios({
       method: 'GET',
       url: 'http://localhost:8000/threads/',
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
     }).then((response) => {
       // console.log(response.data)
       threads.value = response.data
@@ -65,6 +69,9 @@ export const useBookStore = defineStore('book', () => {
     return axios({
       method: 'get',
       url: `http://localhost:8000/threads/${threadId}/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
     })
       .then((response) => {
         return response.data
@@ -98,21 +105,109 @@ export const useBookStore = defineStore('book', () => {
     })
       .then((response) => {
         // console.log(response)
+        return response.data
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+  const getComments = (threadId) => {
+    return axios({
+      method: 'get',
+      url: `http://localhost:8000/threads/${threadId}/comments/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+      .then((response) => {
+        comments.value = response.data
+        return response.data
+      })
+      .catch((err) => {
+        console.log('댓글 가져오기 에러')
+        console.log(err)
+      })
+  }
+
+  const createComment = (threadId, content) => {
+    return axios({
+      method: 'post',
+      url: `http://localhost:8000/threads/${threadId}/comments/`,
+      data: { content },
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+      .then((response) => {
+        comments.value.unshift(response.data) // 댓글 위에서부터 추가
+        return response.data
+      })
+      .catch((err) => {
+        console.log('댓글 생성하기 에러')
+        console.log(err)
+      })
+  }
+
+  const updateComment = (commentId, content) => {
+    return axios({
+      method: 'put',
+      url: `http://localhost:8000/comments/${commentId}/`,
+      data: { content },
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+      .then((response) => {
+        const index = comments.value.findIndex(
+          (comment) => comment.id === commentId
+        )
+        if (index !== -1) {
+          comments.value[index] = response.data
+        }
+        return response.data
+      })
+      .catch((err) => {
+        console.log('댓글 수정하기 에러')
+        console.log(err)
+      })
+  }
+
+  const deleteComment = (commentId) => {
+    return axios({
+      method: 'delete',
+      url: `http://localhost:8000/comments/${commentId}/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+      .then((response) => {
+        comments.value = comments.value.filter(
+          (comment) => comment.id !== commentId
+        )
+        return response.data
+      })
+      .catch((err) => {
+        console.log('댓글 삭제하기 에러')
+        console.log(err)
+      })
+  }
+
   return {
     books,
-    getBooks,
     categories,
-    getCategories,
     threads,
+    comments,
+    getBooks,
+    getCategories,
     getThreads,
     getBook,
     getThread,
     deleteThread,
     likesThread,
+    getComments,
+    createComment,
+    updateComment,
+    deleteComment,
   }
 })
