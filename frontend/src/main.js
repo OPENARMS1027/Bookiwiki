@@ -1,4 +1,5 @@
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

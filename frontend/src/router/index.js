@@ -1,35 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import LandingView from '@/views/LandingView.vue'
 import BooksListView from '@/views/BooksListView.vue'
 import ThreadsListView from '@/views/ThreadsListView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
+import BookDetailView from '@/views/BookDetailView.vue'
 
 import ThreadWriteView from "@/views/ThreadWriteView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/books',
-      component: BooksListView,
-    },
-    {
-      path: '/threads',
-      component: ThreadsListView,
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-    },
-    {
-      path: '/signup',
-      name: 'signup',
-      component: SignUpView,
-    },
-    {
-      path: "/threads/write",
-      component: ThreadWriteView,
-    },
+    { path: '/', name: 'main', component: LandingView },
+    { path: '/books/:bookId', name: 'bookDetail', component: BookDetailView, props: true },
+    { path: '/books', name: 'bookList', component: BooksListView },
+    { path: '/threads', name: 'threadList', component: ThreadsListView },
+    { path: '/threads/:threadId', name: 'threadDetail', component: '' },
+    { path: '/mypage', name: 'myPage', component: '' },
+    { path: '/login', name: 'login', component: LoginView },
+    { path: '/signup', name: 'signup', component: SignUpView },
   ],
 })
 

@@ -18,8 +18,6 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { defineProps } from "vue";
-import '@/style/BooksList/BookCard.css'
 
 const props = defineProps({
   book: Object,
@@ -33,4 +31,43 @@ const moveToDetail = (bookId) => {
 </script>
 
 <style scoped>
+.book-card {
+    display: flex;
+    align-items: center;
+    background-color: rgb(46, 46, 46);
+    margin: 10px;
+    padding: 30px 15px;
+    border-radius: 10px;
+  }
+  
+  .book-cover-img {
+    width: 80px;
+  }
+  
+  p {
+    padding: 5px 0px;
+    margin: 0;
+  }
+  
+  .book-description {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: 10px;
+  }
+  
+  .book-title {
+    font-size: larger;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .book-info {
+    color: rgb(100, 99, 96);
+  }
+  
+  .book-subtitle {
+    color: rgb(139, 137, 132);
+  }
 </style>
