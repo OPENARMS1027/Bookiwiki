@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book,Category,Thread
+from .models import Book, Category, Thread, Comment
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -23,3 +23,9 @@ class ThreadDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Thread
         fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('id', 'content', 'user', 'thread', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'user', 'thread', 'created_at', 'updated_at')

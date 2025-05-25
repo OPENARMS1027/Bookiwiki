@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .models import Book, Category, Thread
-from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer, ThreadLikesSerializer
+from .models import Book, Category, Thread, Comment
+from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer, CommentSerializer
 
 
 @api_view(["GET", "POST"])
@@ -43,9 +43,11 @@ def book_detail(request, book_id):
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
-@api_view(["GET", "DELETE", "PUT"])
+@api_view(["GET", "DELETE", "PUT",])
+@permission_classes([IsAuthenticated])
 def thread_detail(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
+    
     if request.method == "GET":
         serializer = ThreadDetailSerializer(thread)
         return Response(serializer.data)
@@ -68,3 +70,42 @@ def thread_likes(request, thread_id):
         thread.likes.add(request.user)
     serializer = ThreadSerializer(thread, context={'request': request})
     return Response(serializer.data)
+
+@api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated])
+def comment_list(request, thread_id):
+    thread = Thread.objects.get(id=thread_id)
+    
+    if request.method == "GET":
+        comments = Comment.objects.filter(thread=thread)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == "POST":
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(
+                user=request.user,
+                thread=thread
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+def comment_detail(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    
+    if comment.user != request.user:
+        return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    if request.method == "GET":
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+    elif request.method == "PUT":
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+    elif request.method == "DELETE":
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

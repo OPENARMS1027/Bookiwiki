@@ -8,4 +8,6 @@ urlpatterns = [
     path("threads/", views.thread_list),
     path("threads/<int:thread_id>/", views.thread_detail),
     path("threads/<int:thread_id>/likes/", views.thread_likes),
+    path("threads/<int:thread_id>/comments/", views.comment_list),
+    path("comments/<int:comment_id>/", views.comment_detail),
 ]
