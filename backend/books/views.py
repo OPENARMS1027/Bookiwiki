@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Book, Category, Thread, Comment
-from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer, CommentSerializer
+from .serializers import BookSerializer, CategorySerializer, ThreadSerializer, ThreadDetailSerializer, CommentSerializer, ThreadCreateSerializer
 
 
 @api_view(["GET", "POST"])
@@ -30,9 +30,8 @@ def thread_list(request):
         return Response(serializer.data)
     
     elif request.method == "POST":
-        serializer = ThreadSerializer(data=request.data)
+        serializer = ThreadCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            # 프론트엔드에서 user 정보를 함께 전송하면 됩니다
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
