@@ -1,8 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useUserStore } from '@/stores/user.js'
 
 export const useBookStore = defineStore('book', () => {
+  const userStore = useUserStore()
   const books = ref([])
   const categories = ref([])
   const threads = ref([])
@@ -85,6 +87,23 @@ export const useBookStore = defineStore('book', () => {
         console.log(err)
       })
   }
+
+  const likesThread = (threadId) => {
+    axios({
+      method: 'post',
+      url: `http://127.0.0.1:8000/threads/${threadId}/likes/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+      .then((response) => {
+        // console.log(response)
+        return response.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   return {
     books,
     getBooks,
@@ -95,5 +114,6 @@ export const useBookStore = defineStore('book', () => {
     getBook,
     getThread,
     deleteThread,
+    likesThread,
   }
 })
