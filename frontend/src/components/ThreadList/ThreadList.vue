@@ -15,16 +15,30 @@
   import { useBookStore } from '@/stores/book.js'
   import ThreadItem from '@/components/ThreadList/ThreadItem.vue'
 
-  const store = useBookStore()
-  const threads = computed(() => store.threads)
+<script setup>
+import { onMounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useBookStore } from '@/stores/book.js'
+import ThreadItem from '@/components/ThreadList/ThreadItem.vue'
+import '@/style/ThreadsList/ThreadList.css'
 
-  onMounted(() => {
+const route = useRoute()
+const store = useBookStore()
+const threads = computed(() => store.threads)
+
+onMounted(() => {
+  store.getThreads()
+})
+
+watch(
+  () => route.fullPath,
+  () => {
     store.getThreads()
   })
   </script>
   
   <style scoped>
-  /* .card-container {
+  .card-container {
     padding-left: 50px;
     padding-right: 50px;
     display: flex;
@@ -52,6 +66,6 @@
   
   .card-item a:hover {
     color: #40a9ff; 
-  } */
+  }
   </style>
   

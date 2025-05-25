@@ -6,7 +6,8 @@ import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import BookDetailView from '@/views/BookDetailView.vue'
 import ThreadFormView from '@/views/ThreadFormView.vue'
-
+import ThreadDetailView from '@/views/ThreadDetailView.vue'
+import BookDetailView from '@/views/BookDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,11 +16,10 @@ const router = createRouter({
     { path: '/books/:bookId', name: 'bookDetail', component: BookDetailView, props: true },
     { path: '/books', name: 'bookList', component: BooksListView },
     { path: '/threads', name: 'threadList', component: ThreadsListView },
-    { path: '/threads/:threadId', name: 'threadDetail', component: '' },
+    { path: '/threads/:threadId', name: 'threadDetail', component: ThreadDetailView },
     { path: '/mypage', name: 'myPage', component: '' },
     { path: '/login', name: 'login', component: LoginView },
     { path: '/signup', name: 'signup', component: SignUpView },
-    // { path: '/threads/form', name: 'threadForm', component: ThreadFormView },
     { path: '/:bookId/threads/form', name: 'threadForm', component: ThreadFormView },
   ],
 })
