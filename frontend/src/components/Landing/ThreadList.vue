@@ -5,9 +5,14 @@
       추천 스레드
     </h2>
     <p class="section-description">
-      관심 장르를 바탕으로 최근 스레드를 추천해드려요
+      <div v-if="store.isLogin">
+        관심 장르를 바탕으로 최근 스레드를 추천해드려요
+      </div>
+      <div v-else>
+        <span class="login-text" @click="goToLogin">로그인</span>하면 관심 장르를 바탕으로 최근 스레드를 추천해드려요
+      </div>
     </p>
-    <div class="thread-grid">
+    <div v-if="store.isLogin" class="thread-grid">
       <RouterLink
         v-for="thread in threadList"
         :key="thread.id"
@@ -19,10 +24,6 @@
           <p class="thread-text">{{ thread.content }}</p>
         </div>
         <div class="thread-meta">
-          <span class="meta-item">
-            <i class="fas fa-user"></i>
-            {{ thread.user }}
-          </span>
           <span class="meta-item">
             <i class="fas fa-heart"></i>
             {{ thread.likes.length }}
@@ -38,31 +39,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
-import { useBookStore } from "@/stores/book.js";
+import { ref, onMounted } from "vue"
+import { RouterLink } from "vue-router"
+import { useBookStore } from "@/stores/book.js"
+import { useUserStore } from "@/stores/user.js"
+import { useRouter } from "vue-router"
 
-const store = useBookStore();
-const interestedCategory = [1, 2]; // user 정보를 토대로 관심 장르 가져오기
-const threadList = ref([]);
+const router = useRouter()
+const store = useUserStore()
+const bookStore = useBookStore()
+const interestedCategory = [1, 2]
+const threadList = ref([])
+
+const goToLogin = () => {
+  router.push({ name: 'login' })
+}
 
 onMounted(() => {
-  store.getThreads();
-  threadList.value = store.threads
-    .filter((thread) => interestedCategory.includes(thread.book.category))
-    .sort(
-      (a, b) =>
-        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-    )
-    .slice(0, 6);
-});
+  if (store.isLogin) {
+    bookStore.getThreads()
+    threadList.value = bookStore.threads
+      .filter((thread) => interestedCategory.includes(thread.book.category))
+      .sort(
+        (a, b) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      )
+      .slice(0, 6)
+  }
+})
 </script>
 
 <style scoped>
-.thread-section {
-  width: 100%;
-}
-
 .section-title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -84,16 +91,31 @@ onMounted(() => {
   font-size: 1.1rem;
 }
 
+.login-text {
+  color: #4caf50;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.login-text:hover {
+  color: #45a049;
+  text-decoration: underline;
+}
+
 .thread-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.5rem;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0.5rem;
 }
 
 .thread-card {
   background: #f8f9fa;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 16px;
+  padding: 1.75rem;
   text-decoration: none;
   color: inherit;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -101,30 +123,70 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
   height: 100%;
+  min-height: 280px;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.thread-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #4CAF50, #81C784);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .thread-card:hover {
   transform: translateY(-4px);
   background: white;
   border-color: rgba(76, 175, 80, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.12);
+}
+
+.thread-card:hover::before {
+  opacity: 1;
 }
 
 .thread-content {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  overflow: hidden;
 }
 
 .thread-title {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #2c3e50;
-  margin: 0 0 1rem;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.4;
+  position: relative;
+  padding-bottom: 0.75rem;
+  word-break: break-word;
+}
+
+.thread-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2rem;
+  height: 2px;
+  background: rgba(76, 175, 80, 0.3);
 }
 
 .thread-text {
@@ -136,36 +198,62 @@ onMounted(() => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.6;
+  word-break: break-word;
 }
 
 .thread-meta {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(76, 175, 80, 0.1);
 }
 
 .meta-item {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   color: #666;
   font-size: 0.9rem;
+  transition: color 0.2s ease;
 }
 
 .meta-item i {
   color: #4caf50;
-  font-size: 0.9em;
+  font-size: 1rem;
+}
+
+.thread-card:hover .meta-item {
+  color: #4caf50;
+}
+
+@media (max-width: 1400px) {
+  /* .thread-section {
+    padding: 2rem 3rem;
+  } */
 }
 
 @media (max-width: 1200px) {
+  .thread-section {
+    padding: 2rem;
+  }
+
   .thread-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 0.5rem;
+  }
+
+  .thread-card {
+    min-height: 250px;
   }
 }
 
 @media (max-width: 768px) {
+  .thread-section {
+    padding: 1.5rem;
+  }
+
   .section-title {
     font-size: 1.3rem;
   }
@@ -176,20 +264,27 @@ onMounted(() => {
   }
 
   .thread-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 0.5rem;
   }
 
   .thread-card {
-    padding: 1.25rem;
+    padding: 1.5rem;
+    min-height: 220px;
   }
 
   .thread-title {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
   }
 
   .thread-text {
     font-size: 0.9rem;
+  }
+
+  .thread-meta {
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
   }
 }
 </style>
