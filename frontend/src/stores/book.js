@@ -135,9 +135,6 @@ export const useBookStore = defineStore('book', () => {
     return axios({
       method: 'get',
       url: `http://localhost:8000/threads/${threadId}/comments/`,
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
     })
       .then((response) => {
         comments.value = response.data
