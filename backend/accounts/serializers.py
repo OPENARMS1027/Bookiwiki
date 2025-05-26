@@ -56,6 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     followings_count = serializers.SerializerMethodField()
     is_followed = serializers.SerializerMethodField()
+    threads_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -64,6 +65,7 @@ class UserSerializer(serializers.ModelSerializer):
             'week_avg_time', 'year_avg_time',
             'profile_img', 'interested_category', 'books',
             'followers_count', 'followings_count', 'is_followed',
+            'threads_count',
         ]
     
     def get_followers_count(self, obj):
@@ -77,3 +79,6 @@ class UserSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.followers.filter(pk=request.user.pk).exists()
         return False
+
+    def get_threads_count(self, obj):
+        return obj.thread_set.count()

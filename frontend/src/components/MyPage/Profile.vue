@@ -36,7 +36,7 @@
           <div class="stat-item">
             <span class="stat-label">작성 스레드</span>
             <span class="stat-value">{{
-              userStore.thisUser?.thread_count || 0
+              userStore.thisUser?.threads_count || 0
             }}</span>
           </div>
         </div>
