@@ -32,18 +32,23 @@ export const useUserStore = defineStore(
     }
 
     const login = ({ username, password }) => {
-      axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8000/accounts/login/',
-        data: { username, password },
-      })
-        .then((res) => {
-          console.log(res)
-          console.log('로그인 성공')
-          token.value = res.data.key
-          // router.push({ name: 'home' })
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/accounts/login/',
+          data: { username, password },
         })
-        .catch((err) => console.log(err))
+          .then((res) => {
+            console.log('로그인 성공')
+            token.value = res.data.key
+            resolve(res)
+          })
+          .catch((err) => {
+            console.log('로그인 실패:', err)
+            token.value = ''
+            reject(err)
+          })
+      })
     }
 
     const logout = () => {
