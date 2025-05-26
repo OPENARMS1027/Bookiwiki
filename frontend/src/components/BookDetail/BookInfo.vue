@@ -55,7 +55,7 @@ const moveToThread = (bookId) => {
     })
     return
   }
-  router.push({ name: 'threadsForm', params: { bookId: bookId } })
+  router.push({ name: 'threadForm', params: { bookId: bookId } })
 }
 
 // 서재에 담기 버튼 함수

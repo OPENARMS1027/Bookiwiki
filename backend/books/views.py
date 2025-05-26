@@ -43,7 +43,7 @@ def book_detail(request, book_id):
         return Response(serializer.data)
 
 @api_view(["GET", "DELETE", "PUT",])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def thread_detail(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
     
@@ -137,3 +137,10 @@ def add_to_user_books(request):
             {'message': str(e)}, 
             status=status.HTTP_400_BAD_REQUEST
         )
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_thread_list(request):
+    threads = Thread.objects.filter(user=request.user).order_by('-created_at')
+    serializer = ThreadSerializer(threads, many=True)
+    return Response(serializer.data)

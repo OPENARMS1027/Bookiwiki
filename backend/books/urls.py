@@ -11,4 +11,5 @@ urlpatterns = [
     path("threads/<int:thread_id>/comments/", views.comment_list),
     path("comments/<int:comment_id>/", views.comment_detail),
     path("userbooks/", views.add_to_user_books),
+    path("my-threads/", views.my_thread_list),
 ]
