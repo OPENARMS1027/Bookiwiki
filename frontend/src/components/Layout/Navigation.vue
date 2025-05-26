@@ -19,10 +19,16 @@
         <font-awesome-icon :icon="['fas', 'user']" />
         <span>마이페이지</span>
       </RouterLink>
+      <!-- 로그인 상태에 따른 조건부 렌더링 -->
       <div class="auth-links">
-        <RouterLink :to="{ name: 'login' }" class="nav-link">로그인</RouterLink>
-        <span class="divider">|</span>
-        <RouterLink :to="{ name: '' }" class="nav-link">로그아웃</RouterLink>
+        <template v-if="userStore.isLogin">
+          <button @click="handleLogout" class="nav-link logout-btn">로그아웃</button>
+        </template>
+        <template v-else>
+          <RouterLink :to="{ name: 'login' }" class="nav-link">로그인</RouterLink>
+          <span class="divider">|</span>
+          <RouterLink :to="{ name: 'signup' }" class="nav-link">회원가입</RouterLink>
+        </template>
       </div>
     </div>
   </nav>
@@ -30,6 +36,16 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore()
+const router = useRouter()
+
+const handleLogout = () => {
+  userStore.logout()
+  router.push({ name: 'main' })
+}
 </script>
 
 <style scoped>
@@ -118,6 +134,14 @@ import { RouterLink } from 'vue-router'
 
 .divider {
   color: rgba(76, 175, 80, 0.3);
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
