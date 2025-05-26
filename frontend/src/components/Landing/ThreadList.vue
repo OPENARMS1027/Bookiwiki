@@ -6,7 +6,7 @@
     </h2>
     <p class="section-description">
       <div v-if="userStore.isLogin">
-        <template v-if="userStore.thisUser?.interested_category?.length">
+        <template v-if="user?.interested_category?.length">
           관심 장르를 바탕으로 최근 스레드를 추천해드려요
         </template>
         <template v-else>
@@ -18,33 +18,38 @@
       </div>
     </p>
     <div v-if="userStore.isLogin" class="thread-grid">
-      <RouterLink
-        v-for="thread in threadList"
-        :key="thread.id"
-        :to="{ name: 'threadDetail', params: { threadId: thread.id } }"
-        class="thread-card"
-      >
-        <div class="thread-content">
-          <h3 class="thread-title">{{ thread.title }}</h3>
-          <p class="thread-text">{{ thread.content }}</p>
-        </div>
-        <div class="thread-meta">
-          <span class="meta-item">
-            <i class="fas fa-heart"></i>
-            {{ thread.likes.length }}
-          </span>
-          <span class="meta-item">
-            <i class="fas fa-comment"></i>
-            {{ thread.comments_count }}
-          </span>
-        </div>
-      </RouterLink>
+      <div v-if="isLoading" class="loading-message">
+        스레드를 불러오는 중입니다...
+      </div>
+      <template v-else>
+        <RouterLink
+          v-for="thread in threadList"
+          :key="thread.id"
+          :to="{ name: 'threadDetail', params: { threadId: thread.id } }"
+          class="thread-card"
+        >
+          <div class="thread-content">
+            <h3 class="thread-title">{{ thread.title }}</h3>
+            <p class="thread-text">{{ thread.content }}</p>
+          </div>
+          <div class="thread-meta">
+            <span class="meta-item">
+              <i class="fas fa-heart"></i>
+              {{ thread.likes.length }}
+            </span>
+            <span class="meta-item">
+              <i class="fas fa-comment"></i>
+              {{ thread.comments_count }}
+            </span>
+          </div>
+        </RouterLink>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from "vue"
+import { ref, onMounted, watch } from "vue"
 import { RouterLink } from "vue-router"
 import { useBookStore } from "@/stores/book.js"
 import { useUserStore } from "@/stores/user.js"
@@ -56,50 +61,84 @@ const bookStore = useBookStore()
 const threadList = ref([])
 const user = ref(null)
 const interestedCategory = ref([])
-
+const isLoading = ref(true)
 
 const goToLogin = () => {
   router.push({ name: 'login' })
 }
 
-const updateThreadList = () => {
-  if (!bookStore.threads || !user.value) return
-
-  if (user.value?.interested_category?.length) {
-    threadList.value = bookStore.threads
-      .filter(thread => {
-        return interestedCategory.value.includes(thread.book?.category)
-      })
-      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
-      .slice(0, 6)
-  } else {
-    threadList.value = [...bookStore.threads]
-      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
-      .slice(0, 6)
-  }
-}
-
-onMounted(async () => {
-  if (userStore.isLogin) {
-    try {
-      await Promise.all([
-        userStore.getThisUser(),
-        bookStore.getThreads()
-      ])
+const updateThreadList = async () => {
+  try {
+    if (!user.value) {
+      await userStore.getThisUser()
       if (userStore.thisUser) {
         user.value = userStore.thisUser
         interestedCategory.value = user.value.interested_category.map(item => item.id)
       }
-      updateThreadList()
+    }
+
+    if (!bookStore.threads?.length) {
+      await bookStore.getThreads()
+    }
+
+    if (!bookStore.threads || !user.value) {
+      return
+    }
+
+    if (user.value?.interested_category?.length) {
+      const filtered = bookStore.threads
+        .filter(thread => {
+          const isIncluded = interestedCategory.value.includes(thread.book?.category)
+          return isIncluded
+        })
+        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+        .slice(0, 6)
+      threadList.value = filtered
+    } else {
+      threadList.value = [...bookStore.threads]
+        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+        .slice(0, 6)
+    }
+    isLoading.value = false
+  } catch (error) {
+    console.error(error)
+    isLoading.value = false
+  }
+}
+
+watch(() => userStore.thisUser, (newUser) => {
+  if (newUser) {
+    user.value = newUser
+    interestedCategory.value = newUser.interested_category.map(item => item.id)
+    updateThreadList()
+  }
+}, { immediate: true })
+
+watch(() => bookStore.threads, (newThreads) => {
+  if (newThreads?.length > 0) {
+    updateThreadList()
+  }
+}, { immediate: true })
+
+onMounted(async () => {
+  if (userStore.isLogin) {
+    try {
+      isLoading.value = true     
+      await userStore.getThisUser()
+      
+      if (userStore.thisUser) {
+        user.value = userStore.thisUser
+        interestedCategory.value = user.value.interested_category.map(item => item.id)
+      }
+
+      if (!bookStore.threads?.length) {
+        await bookStore.getThreads()
+      }
+      
+      await updateThreadList()
     } catch (error) {
       console.error(error)
     }
-  }
-})
-
-watchEffect(() => {
-  if (userStore.isLogin && bookStore.threads.length > 0 && user.value) {
-    updateThreadList()
   }
 })
 </script>
@@ -260,6 +299,14 @@ watchEffect(() => {
 
 .thread-card:hover .meta-item {
   color: #4caf50;
+}
+
+.loading-message {
+  text-align: center;
+  color: #666;
+  grid-column: 1 / -1;
+  padding: 2rem;
+  font-size: 1.1rem;
 }
 
 @media (max-width: 1400px) {
