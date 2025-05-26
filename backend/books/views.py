@@ -43,7 +43,7 @@ def book_detail(request, book_id):
         return Response(serializer.data)
 
 @api_view(["GET", "DELETE", "PUT",])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def thread_detail(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
     
@@ -126,6 +126,55 @@ def add_to_user_books(request):
         # 서재에 추가
         user.books.add(book)
         return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
+
+    except Book.DoesNotExist:
+        return Response(
+            {'message': 'book_not_found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'message': str(e)}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_thread_list(request):
+    threads = Thread.objects.filter(user=request.user).order_by('-created_at')
+    serializer = ThreadSerializer(threads, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_user_book(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        user = request.user
+        is_in_library = user.books.filter(id=book.id).exists()
+        
+        return Response({
+            'is_in_library': is_in_library
+        })
+    except Book.DoesNotExist:
+        return Response(
+            {'message': 'book_not_found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'message': str(e)}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_from_user_books(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        user = request.user
+        user.books.remove(book)
+        return Response({'message': 'success'}, status=status.HTTP_200_OK)
 
     except Book.DoesNotExist:
         return Response(

@@ -3,8 +3,15 @@
     <header class="header">
       <p class="book-title">{{ book.title }}</p>
       <div class="button-group">
-        <button class="add-button" @click="moveToAdd(book.id)">
-          <i class="fas fa-bookmark"></i> 내 서재에 담기
+        <button
+          :class="[
+            'library-button',
+            isInLibrary ? 'remove-button' : 'add-button',
+          ]"
+          @click="handleLibraryAction(book.id)"
+        >
+          <i :class="isInLibrary ? 'far fa-bookmark' : 'fas fa-bookmark'"></i>
+          {{ isInLibrary ? '내 서재에 담김' : '내 서재에 담기' }}
         </button>
         <button class="thread-button" @click="moveToThread(book.id)">
           <i class="fas fa-pen"></i> 스레드 작성
@@ -33,22 +40,91 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 
-defineProps({
+const props = defineProps({
   book: Object,
 })
+
 const router = useRouter()
 const userStore = useUserStore()
+const isInLibrary = ref(false)
 
-// console.log(book)
+// 서재에 있는지 확인
+const checkIfInLibrary = async () => {
+  if (!userStore.isLogin || !props.book) return
+
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/userbooks/check/${props.book.id}/`,
+      {
+        headers: {
+          Authorization: `Token ${userStore.token}`,
+        },
+      }
+    )
+    isInLibrary.value = response.data.is_in_library
+  } catch (error) {
+    console.error('서재 확인 실패:', error)
+  }
+}
+
+// 서재 담기, 빼기
+const handleLibraryAction = async (bookId) => {
+  if (!userStore.isLogin) {
+    alert('로그인이 필요한 서비스입니다.')
+    router.push({
+      name: 'login',
+      query: { redirect: router.currentRoute.value.fullPath },
+    })
+    return
+  }
+
+  try {
+    if (isInLibrary.value) {
+      await axios.delete(`http://127.0.0.1:8000/userbooks/${bookId}/`, {
+        headers: {
+          Authorization: `Token ${userStore.token}`,
+        },
+      })
+      isInLibrary.value = false
+      alert('서재에서 제거되었습니다')
+    } else {
+      await axios.post(
+        'http://127.0.0.1:8000/userbooks/',
+        {
+          book_id: bookId,
+        },
+        {
+          headers: {
+            Authorization: `Token ${userStore.token}`,
+          },
+        }
+      )
+      isInLibrary.value = true
+      alert('내 서재에 저장되었습니다')
+    }
+  } catch (error) {
+    if (
+      error.response?.status === 400 &&
+      error.response?.data?.message === 'already_exists'
+    ) {
+      alert('이미 서재에 존재하는 책입니다')
+      isInLibrary.value = true
+    } else {
+      console.error('서재 작업 실패:', error)
+      alert('작업에 실패했습니다')
+    }
+  }
+}
+
 // 스레드 생성 페이지 이동
 const moveToThread = (bookId) => {
   if (!userStore.isLogin) {
     alert('로그인이 필요한 서비스입니다.')
-    // 현재 페이지의 경로를 쿼리 파라미터로 같이 보내주기
     router.push({
       name: 'login',
       query: { redirect: router.currentRoute.value.fullPath },
@@ -58,74 +134,9 @@ const moveToThread = (bookId) => {
   router.push({ name: 'threadForm', params: { bookId: bookId } })
 }
 
-// 서재에 담기 버튼 함수
-const moveToAdd = async (bookId) => {
-  try {
-    // 서재에 책 추가 API 호출
-    await axios.post(
-      'http://127.0.0.1:8000/books/userbooks/',
-      {
-        book_id: bookId,
-      },
-      {
-        headers: {
-          Authorization: `Token ${userStore.token}`,
-        },
-      }
-    )
-
-    // 성공 알림
-    alert('내 서재에 저장되었습니다')
-  } catch (error) {
-    if (
-      error.response?.status === 400 &&
-      error.response?.data?.message === 'already_exists'
-    ) {
-      alert('이미 서재에 존재하는 책입니다')
-    } else {
-      console.error('서재 담기 실패:', error)
-      alert('서재 담기에 실패했습니다')
-    }
-  }
-}
-
-// 서재에 담기 버튼 함수
-// const moveToAdd = async (bookId) => {
-//   if (!userStore.isLogin) {
-//     alert('로그인이 필요한 서비스입니다.')
-//     // 현재 페이지의 경로를 쿼리 파라미터로 같이 보내주기
-//     router.push({
-//       name: 'login',
-//       query: { redirect: router.currentRoute.value.fullPath },
-//     })
-//     return
-//   }
-
-//   try {
-//     await axios.post(
-//       'http://127.0.0.1:8000/books/userbooks/',
-//       {
-//         book_id: bookId,
-//       },
-//       {
-//         headers: {
-//           Authorization: `Token ${userStore.token}`,
-//         },
-//       }
-//     )
-//     alert('내 서재에 저장되었습니다')
-//   } catch (error) {
-//     if (
-//       error.response?.status === 400 &&
-//       error.response?.data?.message === 'already_exists'
-//     ) {
-//       alert('이미 서재에 존재하는 책입니다')
-//     } else {
-//       console.error('서재 담기 실패:', error)
-//       alert('서재 담기에 실패했습니다')
-//     }
-//   }
-// }
+onMounted(() => {
+  checkIfInLibrary()
+})
 </script>
 
 <style scoped>
@@ -153,7 +164,7 @@ const moveToAdd = async (bookId) => {
   margin-top: 1rem;
 }
 
-.add-button,
+.library-button,
 .thread-button {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -173,6 +184,18 @@ const moveToAdd = async (bookId) => {
 
 .add-button:hover {
   background-color: #45a049;
+}
+
+.remove-button {
+  background-color: white;
+  color: #4caf50;
+  border: 2px solid #4caf50;
+}
+
+.remove-button:hover {
+  background-color: #f8f8f8;
+  border-color: #45a049;
+  color: #45a049;
 }
 
 .thread-button {
