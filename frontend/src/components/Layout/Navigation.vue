@@ -10,7 +10,9 @@
       >&nbsp;&nbsp;&nbsp;
       <RouterLink :to="{ name: 'myPage' }">마이페이지</RouterLink
       >&nbsp;&nbsp;&nbsp;
-      <RouterLink :to="{ name: '' }">로그인</RouterLink>&nbsp;&nbsp;&nbsp;
+      <RouterLink :to="{ name: 'login' }">로그인</RouterLink>&nbsp;&nbsp;&nbsp;
+      <RouterLink :to="{ name: 'signup' }">회원가입</RouterLink
+      >&nbsp;&nbsp;&nbsp;
       <RouterLink :to="{ name: '' }">로그아웃</RouterLink>&nbsp;&nbsp;&nbsp;
     </div>
   </div>
