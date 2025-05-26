@@ -28,16 +28,9 @@
             </button>
           </div>
         </div>
-        <div
-          class="thread-actions"
-          v-if="
-            userStore.thisUser && userStore.thisUser.id === props.thread.user
-          "
-        >
-          <button
-            class="action-btn delete"
-            @click="onThreadDelete(props.thread.id)"
-          >
+        <!-- 작성자만 수정, 삭제 가능 -->
+        <div class="thread-actions" v-if="userStore.isLogin && userStore.thisUser && userStore.thisUser.id === props.thread.user">
+          <button class="action-btn delete" @click="onThreadDelete(props.thread.id)">
             <font-awesome-icon :icon="['fas', 'trash']" />
           </button>
           <button

@@ -85,7 +85,6 @@ def thread_likes(request, thread_id):
     return Response(serializer.data)
 
 @api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
 def comment_list(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
 
@@ -93,8 +92,11 @@ def comment_list(request, thread_id):
         comments = Comment.objects.filter(thread=thread).order_by("-created_at")
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
-
+    
+    # 댓글 수정시만 인증여부 체크
     elif request.method == "POST":
+        if not request.user.is_authenticated:
+            return Response({"detail": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, thread=thread)

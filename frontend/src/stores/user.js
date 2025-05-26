@@ -46,6 +46,30 @@ export const useUserStore = defineStore(
         .catch((err) => console.log(err))
     }
 
+    const logout = () => {
+      // 서버에 로그아웃 요청
+      if (token.value) {
+        axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/accounts/logout/',
+          headers: {
+            Authorization: `Token ${token.value}`,
+          },
+        })
+          .then(() => {
+            console.log('로그아웃 성공')
+          })
+          .catch((err) => {
+            console.log('로그아웃 에러:', err)
+          })
+          .finally(() => {
+            // 로컬 상태 초기화
+            token.value = ''
+            thisUser.value = null
+          })
+      }
+    }
+
     const getUser = (userId) => {
       return axios({
         method: 'get',
@@ -101,6 +125,7 @@ export const useUserStore = defineStore(
       signup,
       token,
       login,
+      logout,
       isLogin,
       getUser,
       getThisUser,
