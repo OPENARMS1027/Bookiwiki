@@ -9,15 +9,19 @@
       <div class="thread-header">
         <div class="thread-user">
           <div class="user-avatar">
-            <img v-if="user.profile_img" :src="user.profile_img" alt="user_profile_img" />
+            <img
+              v-if="user.profile_img"
+              :src="user.profile_img"
+              alt="user_profile_img"
+            />
             <font-awesome-icon v-else :icon="['fas', 'user']" />
           </div>
           <div class="user-info">
             <span class="username">{{ user.username }}</span>
-            <button 
-              v-if="showFollowButton" 
+            <button
+              v-if="showFollowButton"
               class="follow-btn"
-              :class="{ 'following': isFollowing }"
+              :class="{ following: isFollowing }"
               @click="handleFollow"
             >
               {{ isFollowing ? '팔로잉' : '팔로우' }}
@@ -29,7 +33,10 @@
           <button class="action-btn delete" @click="onThreadDelete(props.thread.id)">
             <font-awesome-icon :icon="['fas', 'trash']" />
           </button>
-          <button class="action-btn edit" @click="onThreadUpdate(props.thread.id)">
+          <button
+            class="action-btn edit"
+            @click="onThreadUpdate(thread.book.id, thread.id)"
+          >
             <font-awesome-icon :icon="['fas', 'edit']" />
           </button>
         </div>
@@ -41,8 +48,14 @@
       </div>
 
       <div class="thread-footer">
-        <button class="like-btn" :class="{ 'liked': isLiked }" @click="handleThreadLikes">
-          <font-awesome-icon :icon="isLiked ? ['fas', 'heart'] : ['far', 'heart']" />
+        <button
+          class="like-btn"
+          :class="{ liked: isLiked }"
+          @click="handleThreadLikes"
+        >
+          <font-awesome-icon
+            :icon="isLiked ? ['fas', 'heart'] : ['far', 'heart']"
+          />
           <span>{{ likesCount }}</span>
         </button>
       </div>
@@ -54,8 +67,8 @@
 const props = defineProps({
   thread: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 
 import { ref, watch, onMounted, computed } from 'vue'
@@ -71,11 +84,15 @@ const emit = defineEmits(['update-thread'])
 const isFollowing = ref(false)
 
 const showFollowButton = computed(() => {
-  return userStore.thisUser && user.value && userStore.thisUser.id !== user.value.id
+  return (
+    userStore.thisUser && user.value && userStore.thisUser.id !== user.value.id
+  )
 })
 
 const isLiked = computed(() => {
-  return userStore.thisUser && props.thread.likes.includes(userStore.thisUser.id)
+  return (
+    userStore.thisUser && props.thread.likes.includes(userStore.thisUser.id)
+  )
 })
 
 const likesCount = computed(() => {
@@ -98,21 +115,21 @@ watch(
 
 const onThreadDelete = async (threadId) => {
   await bookStore.deleteThread(threadId)
-  router.push({ name: 'threadList' })
+  await router.push({ name: 'threadList' })
 }
 
-const onThreadUpdate = (threadId) => {
-  router.push({ name: 'threadWrite', query: { id: threadId, type: 'edit' } })
+const onThreadUpdate = (bookId, threadId) => {
+  router.push({ name: 'threadForm', params: { bookId: bookId }, query: {  type: 'edit',threadId: threadId } })
 }
 
 const handleThreadLikes = async () => {
   if (!userStore.thisUser) return
-  
+
   try {
     const userId = userStore.thisUser.id
     const currentLikes = [...props.thread.likes]
     const index = currentLikes.indexOf(userId)
-    
+
     if (index === -1) {
       currentLikes.push(userId)
     } else {
@@ -121,11 +138,11 @@ const handleThreadLikes = async () => {
 
     emit('update-thread', {
       ...props.thread,
-      likes: currentLikes
+      likes: currentLikes,
     })
 
     const updatedThread = await bookStore.likesThread(props.thread.id)
-    
+
     emit('update-thread', updatedThread)
   } catch (error) {
     console.error('좋아요 업데이트 실패:', error)
@@ -166,7 +183,7 @@ onMounted(() => {
   gap: 1rem;
   height: 200px;
   font-size: 1.1em;
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .thread-info {
@@ -197,7 +214,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   background: rgba(76, 175, 80, 0.1);
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .user-avatar img {
@@ -223,8 +240,8 @@ onMounted(() => {
 
 .follow-btn {
   background: transparent;
-  border: 1px solid #4CAF50;
-  color: #4CAF50;
+  border: 1px solid #4caf50;
+  color: #4caf50;
   padding: 0.25rem 1rem;
   border-radius: 20px;
   font-size: 0.9em;
@@ -233,7 +250,7 @@ onMounted(() => {
 }
 
 .follow-btn.following {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
@@ -258,7 +275,7 @@ onMounted(() => {
 
 .action-btn:hover {
   opacity: 1;
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .thread-content {
@@ -304,7 +321,7 @@ onMounted(() => {
 }
 
 .like-btn.liked {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .like-btn svg {

@@ -87,8 +87,12 @@ export const useBookStore = defineStore('book', () => {
     axios({
       method: 'delete',
       url: `http://localhost:8000/threads/${threadId}/`,
+      headers : {
+        Authorization : `Token ${userStore.token}`,
+      }
     })
       .then((response) => {
+        console.log(response)
         console.log('삭제 성공')
       })
       .catch((err) => {
@@ -209,6 +213,26 @@ export const useBookStore = defineStore('book', () => {
       })
   }
 
+  const updateThread = (threadId, threadData) => {
+    return axios({
+      method: 'put',
+      url: `http://localhost:8000/threads/${threadId}/`,
+      data: threadData,
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        // console.log('수정 성공:', response.data)
+        return response.data
+      })
+      .catch((err) => {
+        console.log('스레드 수정 실패', err)
+        throw err
+      })
+  }
+
   return {
     books,
     getBooks,
@@ -227,5 +251,6 @@ export const useBookStore = defineStore('book', () => {
     createComment,
     updateComment,
     deleteComment,
+    updateThread,
   }
 })

@@ -5,11 +5,17 @@
         <h2>도서 정보</h2>
       </div>
       <div class="book-content">
-        <RouterLink :to="{ name: 'bookDetail', params: { bookId: book.id } }" class="book-cover">
+        <RouterLink
+          :to="{ name: 'bookDetail', params: { bookId: book.id } }"
+          class="book-cover"
+        >
           <img :src="book.cover" alt="book_cover_img" />
         </RouterLink>
         <div class="book-details">
-          <RouterLink :to="{ name: 'bookDetail', params: { bookId: book.id } }" class="book-title-link">
+          <RouterLink
+            :to="{ name: 'bookDetail', params: { bookId: book.id } }"
+            class="book-title-link"
+          >
             <h3 class="book-title">{{ book.title }}</h3>
           </RouterLink>
           <div class="book-meta">
@@ -30,7 +36,10 @@
             <p>{{ truncateDescription(book.description) }}</p>
           </div>
           <div class="book-actions">
-            <RouterLink :to="{ name: 'bookDetail', params: { bookId: book.id } }" class="view-more">
+            <RouterLink
+              :to="{ name: 'bookDetail', params: { bookId: book.id } }"
+              class="view-more"
+            >
               자세히 보기
               <font-awesome-icon :icon="['fas', 'arrow-right']" />
             </RouterLink>
@@ -49,8 +58,8 @@ defineProps({
 })
 
 const truncateDescription = (text) => {
-  if (!text) return '';
-  return text.length > 150 ? text.slice(0, 150) + '...' : text;
+  if (!text) return ''
+  return text.length > 150 ? text.slice(0, 150) + '...' : text
 }
 </script>
 
@@ -66,7 +75,7 @@ const truncateDescription = (text) => {
 .book-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #4CAF50;
+  color: #4caf50;
   margin: 0;
 }
 
@@ -107,12 +116,12 @@ const truncateDescription = (text) => {
   font-size: 1.4rem;
   font-weight: 600;
   margin: 0;
-  color: #2C3E50;
+  color: #2c3e50;
   transition: color 0.2s ease;
 }
 
 .book-title-link:hover .book-title {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .book-meta {
@@ -131,7 +140,7 @@ const truncateDescription = (text) => {
 
 .label {
   font-weight: 600;
-  color: #4CAF50;
+  color: #4caf50;
   min-width: 4rem;
 }
 
@@ -154,7 +163,7 @@ const truncateDescription = (text) => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #4CAF50;
+  color: #4caf50;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
