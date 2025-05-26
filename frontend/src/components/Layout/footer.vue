@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="company-info">
-        <h3>모예모에 컴퍼니</h3>
+        <h3>모예모예 컴퍼니</h3>
         <p>대표이사: 김예나, 이진모</p>
         <p>연락처: 010-7568-8524</p>
       </div>
