@@ -11,10 +11,8 @@
           />
         </template>
         <template v-else>
-          <div
-            class="d2d76bbf7f79ab92e3fd085b97932089efd3a2498efault-profile-icon"
-          >
-            <font-awesome-icon :icon="['fas', 'user']" />
+          <div class="default-profile-icon">
+            <font-awesome-icon :icon="['fas', 'user']" size="4x" />
           </div>
         </template>
       </div>
@@ -71,43 +69,38 @@ const handleImageError = () => {
 
 <style scoped>
 .profile-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
 }
 
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 2.5rem;
 }
 
 .profile-image {
   flex-shrink: 0;
 }
 
-.profile-img {
+.profile-img,
+.default-profile-icon {
   width: 120px;
   height: 120px;
   border-radius: 50%;
+}
+
+.profile-img {
   object-fit: cover;
   border: 3px solid #f0f0f0;
 }
 
 .default-profile-icon {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
   background-color: #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
   color: #666;
+  border: 3px solid #f0f0f0;
 }
 
 .profile-info {
@@ -115,46 +108,69 @@ const handleImageError = () => {
 }
 
 .nickname {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  margin-bottom: 1rem;
-  color: #333;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
 }
 
 .stats {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   background-color: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
 }
 
 .stat-label {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: #666;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .stat-value {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #333;
+  color: #2c3e50;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
     text-align: center;
+    gap: 1.5rem;
+  }
+
+  .nickname {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .stats {
     justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    padding: 0.6rem 1.25rem;
+    min-width: 120px;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
   }
 }
 </style>
