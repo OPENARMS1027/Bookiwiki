@@ -9,12 +9,12 @@
       {{ error }}
     </div>
     <div v-else class="thread-list">
-      <div v-if="myThreads.length === 0" class="no-threads">
+      <div v-if="threads.length === 0" class="no-threads">
         작성한 스레드가 없습니다.
       </div>
       <div v-else>
         <div
-          v-for="thread in myThreads"
+          v-for="thread in threads"
           :key="thread.id"
           class="thread-card"
           @click="goToThread(thread.id)"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
@@ -56,19 +56,17 @@ const threads = ref([])
 const loading = ref(true)
 const error = ref(null)
 
-const myThreads = computed(() => {
-  if (userStore.thisUser) {
-    return threads.value.filter(
-      (thread) => thread.user === userStore.thisUser.id
-    )
-  }
-})
-
-const fetchThreads = async () => {
+const fetchMyThreads = async () => {
   try {
     loading.value = true
-    const response = await axios.get('http://127.0.0.1:8000/threads/')
-    threads.value = response.data
+    const response = await axios.get('http://127.0.0.1:8000/my-threads/', {
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    })
+    if (response.data) {
+      threads.value = response.data
+    }
   } catch (err) {
     error.value = '스레드를 불러오는데 실패했습니다.'
     console.error('Error fetching threads:', err)
@@ -90,9 +88,8 @@ const goToThread = (threadId) => {
   router.push(`/threads/${threadId}`)
 }
 
-onMounted(async () => {
-  await userStore.getThisUser()
-  await fetchThreads()
+onMounted(() => {
+  fetchMyThreads()
 })
 </script>
 
