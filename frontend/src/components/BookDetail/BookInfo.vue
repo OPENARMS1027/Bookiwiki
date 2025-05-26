@@ -33,37 +33,52 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import axios from 'axios'
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import axios from "axios";
 
 defineProps({
   book: Object,
-})
-const router = useRouter()
-const userStore = useUserStore()
+});
+const router = useRouter();
+const userStore = useUserStore();
 
 // console.log(book)
 // 스레드 생성 페이지 이동
-const moveToThread = (bookId) => {
-  if (!userStore.isLogin) {
-    alert('로그인이 필요한 서비스입니다.')
+const moveToThread = async (bookId) => {
+  if (!userStore.isLogin || !userStore.token) {
+    alert("로그인이 필요한 서비스입니다.");
     // 현재 페이지의 경로를 쿼리 파라미터로 같이 보내주기
     router.push({
-      name: 'login',
+      name: "login",
       query: { redirect: router.currentRoute.value.fullPath },
-    })
-    return
+    });
+    return;
   }
-  router.push({ name: 'threadsForm', params: { bookId: bookId } })
-}
+
+  try {
+    // 토큰 유효성 확인
+    await axios.get("http://127.0.0.1:8000/accounts/user/", {
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
+    });
+
+    // 토큰이 유효하면 스레드 작성 페이지로 이동
+    router.push({ name: "threadForm", params: { bookId: bookId } });
+  } catch (error) {
+    console.error("인증 확인 실패:", error);
+    alert("로그인이 필요합니다. 다시 로그인해주세요.");
+    router.push({ name: "login" });
+  }
+};
 
 // 서재에 담기 버튼 함수
 const moveToAdd = async (bookId) => {
   try {
     // 서재에 책 추가 API 호출
     await axios.post(
-      'http://127.0.0.1:8000/books/userbooks/',
+      "http://127.0.0.1:8000/books/userbooks/",
       {
         book_id: bookId,
       },
@@ -72,22 +87,22 @@ const moveToAdd = async (bookId) => {
           Authorization: `Token ${userStore.token}`,
         },
       }
-    )
+    );
 
     // 성공 알림
-    alert('내 서재에 저장되었습니다')
+    alert("내 서재에 저장되었습니다");
   } catch (error) {
     if (
       error.response?.status === 400 &&
-      error.response?.data?.message === 'already_exists'
+      error.response?.data?.message === "already_exists"
     ) {
-      alert('이미 서재에 존재하는 책입니다')
+      alert("이미 서재에 존재하는 책입니다");
     } else {
-      console.error('서재 담기 실패:', error)
-      alert('서재 담기에 실패했습니다')
+      console.error("서재 담기 실패:", error);
+      alert("서재 담기에 실패했습니다");
     }
   }
-}
+};
 
 // 서재에 담기 버튼 함수
 // const moveToAdd = async (bookId) => {

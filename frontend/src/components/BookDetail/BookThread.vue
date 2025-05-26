@@ -14,7 +14,7 @@
               </span>
               <!-- comments생성후 확인 필수 -->
               <span class="comments">
-                <i class="fas fa-comment"></i> {{ thread.likes.length }}
+                <i class="fas fa-comment"></i> {{ thread.comments_count }}
               </span>
               <p class="date">{{ formatDate(thread.created_at) }}</p>
             </div>
