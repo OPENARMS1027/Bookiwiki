@@ -81,7 +81,11 @@ const userStore = useUserStore()
 const bookStore = useBookStore()
 const user = ref(null)
 const emit = defineEmits(['update-thread'])
-const isFollowing = ref(false)
+
+const isFollowing = computed(() => {
+  if (!user.value) return false
+  return userStore.getFollowStatus(user.value.id)
+})
 
 const showFollowButton = computed(() => {
   return (
@@ -105,7 +109,6 @@ watch(
     if (newUser) {
       const userData = await userStore.getUser(newUser)
       user.value = userData
-      isFollowing.value = userData.is_followed
     } else {
       user.value = null
     }
@@ -154,7 +157,6 @@ const handleFollow = async () => {
   try {
     const response = await userStore.followUser(user.value.id)
     if (response) {
-      isFollowing.value = response.is_followed
       const updatedUser = await userStore.getUser(user.value.id)
       user.value = updatedUser
     }
@@ -163,8 +165,12 @@ const handleFollow = async () => {
   }
 }
 
-onMounted(() => {
-  userStore.getThisUser()
+onMounted(async () => {
+  await userStore.getThisUser()
+  if (props.thread?.user) {
+    const userData = await userStore.getUser(props.thread.user)
+    user.value = userData
+  }
 })
 </script>
 

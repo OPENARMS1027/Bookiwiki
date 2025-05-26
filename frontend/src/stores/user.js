@@ -9,6 +9,8 @@ export const useUserStore = defineStore(
     const token = ref('')
     const router = useRouter()
     const thisUser = ref(null) // 현재 로그인한 유저
+    const followStatus = ref({}) // 팔로우 상태를 저장할 객체
+
     const isLogin = computed(() => {
       return token.value ? true : false
     })
@@ -71,6 +73,7 @@ export const useUserStore = defineStore(
             // 로컬 상태 초기화
             token.value = ''
             thisUser.value = null
+            followStatus.value = {} // 팔로우 상태도 초기화
           })
       }
     }
@@ -79,9 +82,13 @@ export const useUserStore = defineStore(
       return axios({
         method: 'get',
         url: `http://127.0.0.1:8000/user/${userId}/`,
+        headers: token.value ? {
+          Authorization: `Token ${token.value}`
+        } : {}
       })
         .then((response) => {
-          // console.log(response.data)
+          // 팔로우 상태를 저장
+          followStatus.value[userId] = response.data.is_followed
           return response.data
         })
         .catch((err) => {
@@ -118,12 +125,19 @@ export const useUserStore = defineStore(
         })
           .then((response) => {
             console.log('팔로우 성공')
+            // 팔로우 상태 업데이트
+            followStatus.value[userId] = response.data.is_followed
             return response.data
           })
           .catch((err) => {
             console.log(err)
           })
       }
+    }
+
+    // 특정 사용자의 팔로우 상태를 반환하는 함수
+    const getFollowStatus = (userId) => {
+      return followStatus.value[userId] || false
     }
 
     return {
@@ -136,6 +150,8 @@ export const useUserStore = defineStore(
       getThisUser,
       thisUser,
       followUser,
+      getFollowStatus,
+      followStatus,
     }
   },
   { persist: true }
