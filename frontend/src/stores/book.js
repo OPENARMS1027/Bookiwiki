@@ -87,8 +87,12 @@ export const useBookStore = defineStore('book', () => {
     axios({
       method: 'delete',
       url: `http://localhost:8000/threads/${threadId}/`,
+      headers : {
+        Authorization : `Token ${userStore.token}`,
+      }
     })
       .then((response) => {
+        console.log(response)
         console.log('삭제 성공')
       })
       .catch((err) => {

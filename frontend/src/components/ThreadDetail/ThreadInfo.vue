@@ -122,7 +122,7 @@ watch(
 
 const onThreadDelete = async (threadId) => {
   await bookStore.deleteThread(threadId)
-  router.push({ name: 'threadList' })
+  await router.push({ name: 'threadList' })
 }
 
 const onThreadUpdate = (threadId) => {

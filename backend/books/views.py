@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Book, Category, Thread, Comment
+from .permissions import IsAuthenticatedOrReadOnly
 from .serializers import (
     BookSerializer,
     CategorySerializer,
@@ -51,8 +52,8 @@ def book_detail(request, book_id):
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
-@api_view(["GET", "DELETE", "PUT",])
-# @permission_classes([IsAuthenticated])
+@api_view(["GET", "DELETE", "PUT"])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def thread_detail(request, thread_id):
     thread = Thread.objects.get(id=thread_id)
 
