@@ -1,18 +1,36 @@
 <template>
   <div class="comment-container">
+    <div class="comment-header">
+      <h3>
+        <font-awesome-icon :icon="['fas', 'comments']" />
+        댓글
+      </h3>
+    </div>
     <div class="comment-form">
       <input
         v-model="commentContent"
         type="text"
         placeholder="댓글을 입력하세요"
         class="comment-input"
+        @keyup.enter="submitComment"
       />
-      <button @click="submitComment" class="submit-button">작성</button>
+      <button @click="submitComment" class="submit-button">
+        <font-awesome-icon :icon="['fas', 'paper-plane']" />
+      </button>
     </div>
     <div class="comment-list">
       <div v-for="comment in comments" :key="comment.id" class="comment-item">
         <div class="comment-content">
-          <span class="comment-text">{{ comment.content }}</span>
+          <div v-if="editingCommentId !== comment.id" class="comment-text">
+            {{ comment.content }}
+          </div>
+          <input
+            v-else
+            v-model="editContent"
+            type="text"
+            class="edit-input"
+            @keyup.enter="updateComment(comment.id)"
+          />
         </div>
         <div
           class="comment-actions"
@@ -21,27 +39,21 @@
           <button
             v-if="editingCommentId !== comment.id"
             @click="startEdit(comment)"
-            class="edit-button"
+            class="action-btn"
           >
-            수정
+            <font-awesome-icon :icon="['fas', 'edit']" />
           </button>
           <button
             v-if="editingCommentId === comment.id"
             @click="updateComment(comment.id)"
-            class="save-button"
+            class="action-btn"
           >
-            수정 완료
+            <font-awesome-icon :icon="['fas', 'check']" />
           </button>
-          <button @click="deleteComment(comment.id)" class="delete-button">
-            삭제
+          <button @click="deleteComment(comment.id)" class="action-btn delete">
+            <font-awesome-icon :icon="['fas', 'trash']" />
           </button>
         </div>
-        <input
-          v-if="editingCommentId === comment.id"
-          v-model="editContent"
-          type="text"
-          class="edit-input"
-        />
       </div>
     </div>
   </div>
@@ -116,41 +128,148 @@ const deleteComment = (commentId) => {
 </script>
 
 <style scoped>
+.comment-container {
+  padding: 1.5rem;
+}
+
+.comment-header {
+  margin-bottom: 1.5rem;
+}
+
+.comment-header h3 {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #4CAF50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
 .comment-form {
   display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgba(76, 175, 80, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.95em;
+  transition: all 0.3s ease;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.2);
 }
 
 .submit-button {
-  background-color: #007bff;
+  background: #4CAF50;
   color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submit-button:hover {
+  background: #43A047;
 }
 
 .comment-list {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .comment-item {
-  border: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  background: rgba(76, 175, 80, 0.02);
+  border-color: rgba(76, 175, 80, 0.2);
 }
 
 .comment-content {
-  margin-bottom: 10px;
+  flex: 1;
+  margin-right: 1rem;
 }
 
 .comment-text {
-  display: block;
+  line-height: 1.5;
+  word-break: break-all;
 }
 
-.edit-button,
-.save-button,
-.delete-button {
+.comment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0.4rem;
   cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.action-btn:hover {
+  opacity: 1;
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+.action-btn.delete:hover {
+  background: rgba(244, 67, 54, 0.1);
+  color: #F44336;
 }
 
 .edit-input {
   width: 100%;
-  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border: 2px solid rgba(76, 175, 80, 0.2);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.95em;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+@media (max-width: 768px) {
+  .comment-container {
+    padding: 1rem;
+  }
+
+  .comment-form {
+    margin-bottom: 1.5rem;
+  }
+
+  .comment-item {
+    padding: 0.75rem;
+  }
 }
 </style>

@@ -1,49 +1,49 @@
 <template>
-  <div>
+  <div class="thread-container">
     <div v-if="!props.thread || !user" class="loading-view">
       <font-awesome-icon :icon="['fas', 'spinner']" spin />
       <span>로딩 중</span>
     </div>
 
     <div v-else class="thread-info">
-      <div class="thread-actions">
-        <button @click="onThreadDelete(props.thread.id)">삭제</button>
-        <button @click="onThreadUpdate(props.thread.id)">수정</button>
-      </div>
-      <div class="thread-user">
-        <span class="author">
-          {{ user.username }}
-          <button 
-            v-if="showFollowButton" 
-            class="follow-btn"
-            :class="{ 'following': isFollowing }"
-            @click="handleFollow"
-          >
-            {{ isFollowing ? '팔로잉' : '팔로우' }}
-          </button>
-        </span>
-        <div v-if="user.profile_img">
-          <img :src="user.profile_img" alt="user_profile_img" />
-        </div>
-        <div v-else>
-          <font-awesome-icon :icon="['fas', 'user']" size="4x" />
-        </div>
-      </div>
       <div class="thread-header">
-        <strong>{{ props.thread.title }}</strong>
-        <p>
-          <div class="likes" v-if="isLiked" @click="handleThreadLikes"
-            ><font-awesome-icon :icon="['fas', 'heart']" />
+        <div class="thread-user">
+          <div class="user-avatar">
+            <img v-if="user.profile_img" :src="user.profile_img" alt="user_profile_img" />
+            <font-awesome-icon v-else :icon="['fas', 'user']" />
           </div>
-          <div class="likes" v-else @click="handleThreadLikes"
-          ><font-awesome-icon :icon="['far', 'heart']" /></div>
-          <span> {{ likesCount }}</span>
-        </p>
-      </div>
-      <div class="thread-main">
-        <div class="thread-content">
-          {{ props.thread.content }}
+          <div class="user-info">
+            <span class="username">{{ user.username }}</span>
+            <button 
+              v-if="showFollowButton" 
+              class="follow-btn"
+              :class="{ 'following': isFollowing }"
+              @click="handleFollow"
+            >
+              {{ isFollowing ? '팔로잉' : '팔로우' }}
+            </button>
+          </div>
         </div>
+        <div class="thread-actions">
+          <button class="action-btn delete" @click="onThreadDelete(props.thread.id)">
+            <font-awesome-icon :icon="['fas', 'trash']" />
+          </button>
+          <button class="action-btn edit" @click="onThreadUpdate(props.thread.id)">
+            <font-awesome-icon :icon="['fas', 'edit']" />
+          </button>
+        </div>
+      </div>
+
+      <div class="thread-content">
+        <h2 class="thread-title">{{ props.thread.title }}</h2>
+        <p class="thread-text">{{ props.thread.content }}</p>
+      </div>
+
+      <div class="thread-footer">
+        <button class="like-btn" :class="{ 'liked': isLiked }" @click="handleThreadLikes">
+          <font-awesome-icon :icon="isLiked ? ['fas', 'heart'] : ['far', 'heart']" />
+          <span>{{ likesCount }}</span>
+        </button>
       </div>
     </div>
   </div>
@@ -151,13 +151,21 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.thread-container {
+  background: transparent;
+  border: 1px solid rgba(76, 175, 80, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .loading-view {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   height: 200px;
-  font-size: 1.2em;
-  color: #888;
+  font-size: 1.1em;
+  color: #4CAF50;
 }
 
 .thread-info {
@@ -165,32 +173,156 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.thread-actions {
+.thread-header {
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(76, 175, 80, 0.1);
 }
 
 .thread-user {
   display: flex;
-  flex-direction: column;
-  align-items: start;
+  align-items: center;
+  gap: 1rem;
 }
 
-.author {
-  padding: 10px;
-}
-
-.thread-header {
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
 }
 
-.likes{
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar svg {
+  font-size: 1.5rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.follow-btn {
+  background: transparent;
+  border: 1px solid #4CAF50;
+  color: #4CAF50;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9em;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.follow-btn.following {
+  background: #4CAF50;
+  color: white;
+}
+
+.follow-btn:hover {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.thread-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  opacity: 1;
+  color: #4CAF50;
 }
 
 .thread-content {
-  text-align: start;
+  padding: 2rem 1.5rem;
+  flex-grow: 1;
+}
+
+.thread-title {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.thread-text {
+  font-size: 1.1em;
+  line-height: 1.6;
+  opacity: 0.9;
+  white-space: pre-wrap;
+}
+
+.thread-footer {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(76, 175, 80, 0.1);
+}
+
+.like-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1em;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.like-btn:hover {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.like-btn.liked {
+  color: #4CAF50;
+}
+
+.like-btn svg {
+  font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+  .thread-header,
+  .thread-content,
+  .thread-footer {
+    padding: 1rem;
+  }
+
+  .thread-title {
+    font-size: 1.3em;
+  }
+
+  .thread-text {
+    font-size: 1em;
+  }
 }
 </style>
