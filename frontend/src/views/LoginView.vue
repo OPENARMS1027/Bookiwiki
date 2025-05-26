@@ -49,12 +49,15 @@ const onLogIn = async () => {
       username: username.value,
       password: password.value,
     }
-    await store.login(data)
-    const redirectPath = route.query.redirect || '/'
-    router.push(redirectPath)
+    const response = await store.login(data)
+    if (response.data.key) {
+      const redirectPath = route.query.redirect || '/'
+      router.push(redirectPath)
+    }
   } catch (error) {
     console.error('로그인 실패:', error)
     alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.')
+    password.value = '' // 비밀번호만 초기화
   }
 }
 </script>
