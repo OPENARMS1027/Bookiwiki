@@ -1,5 +1,9 @@
 <template>
   <div class="recommend-container" v-if="book">
+    <div class="ai-badge">
+      <i class="fas fa-robot"></i>
+      AI 도서 추천
+    </div>
     <!-- 작가의 다른 책 추천 -->
     <div class="recommend-section">
       <h3 class="section-title">
@@ -296,7 +300,8 @@ watch(
 .recommend-container {
   width: 100%;
   max-width: 1400px;
-  margin: 15px auto;
+  margin: 25px auto 15px;
+  position: relative;
 }
 
 .recommend-section {
@@ -307,6 +312,29 @@ watch(
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow: hidden;
+}
+
+.ai-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.ai-badge i {
+  font-size: 1.1em;
 }
 
 .section-title {
@@ -342,11 +370,10 @@ watch(
   margin: 0 auto;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
-  transform: translateX(calc(-100% * var(--slide-index) / 3));
 }
 
 .book-card {
-  flex: 0 0 calc(33.333% - 16px);
+  flex: 0 0 calc((100% - 48px) / 3);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -354,7 +381,7 @@ watch(
   border-radius: 12px;
   background-color: #f8f9fa;
   overflow: hidden;
-  max-width: 220px;
+  max-width: 200px;
   position: relative;
   z-index: 1;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -368,7 +395,7 @@ watch(
 
 .book-image-container {
   width: 100%;
-  padding-top: 120%;
+  padding-top: 140%;
   position: relative;
   overflow: hidden;
   background-color: #f1f3f5;
@@ -469,12 +496,11 @@ watch(
 
 @media (max-width: 1024px) {
   .book-card {
-    flex: 0 0 calc(50% - 12px);
-    max-width: 200px;
+    flex: 0 0 calc((100% - 40px) / 3);
+    max-width: 180px;
   }
 
   .book-list {
-    min-height: 240px;
     gap: 20px;
   }
 }
@@ -495,18 +521,16 @@ watch(
   }
 
   .book-card {
-    flex: 0 0 calc(100% - 16px);
-    max-width: 180px;
+    flex: 0 0 calc((100% - 32px) / 3);
+    max-width: 160px;
   }
 
   .book-list {
     gap: 16px;
-    min-height: 220px;
   }
 
   .book-info {
     padding: 10px;
-    min-height: 50px;
   }
 
   .book-title {
