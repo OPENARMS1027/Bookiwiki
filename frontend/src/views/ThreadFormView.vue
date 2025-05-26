@@ -12,9 +12,6 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const bookId = Number(route.params.bookId)
-console.log(bookId)
-
-
 </script>
 
   

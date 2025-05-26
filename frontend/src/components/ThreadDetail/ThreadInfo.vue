@@ -42,7 +42,7 @@
           </button>
           <button
             class="action-btn edit"
-            @click="onThreadUpdate(props.thread.id)"
+            @click="onThreadUpdate(thread.book.id, thread.id)"
           >
             <font-awesome-icon :icon="['fas', 'edit']" />
           </button>
@@ -125,8 +125,8 @@ const onThreadDelete = async (threadId) => {
   await router.push({ name: 'threadList' })
 }
 
-const onThreadUpdate = (threadId) => {
-  router.push({ name: 'threadWrite', query: { id: threadId, type: 'edit' } })
+const onThreadUpdate = (bookId, threadId) => {
+  router.push({ name: 'threadForm', params: { bookId: bookId }, query: {  type: 'edit',threadId: threadId } })
 }
 
 const handleThreadLikes = async () => {

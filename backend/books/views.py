@@ -68,11 +68,10 @@ def thread_detail(request, thread_id):
     elif request.method == "PUT":
         if thread.user != request.user:
             return Response({"detail": "권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
-        serializer = ThreadSerializer(thread, data=request.data, partial=True)
+        serializer = ThreadCreateSerializer(thread, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -84,7 +83,6 @@ def thread_likes(request, thread_id):
         thread.likes.add(request.user)
     serializer = ThreadSerializer(thread, context={"request": request})
     return Response(serializer.data)
-
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
