@@ -95,86 +95,146 @@ onMounted(() => {
 
 <style scoped>
 .my-threads {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  height: 100%;
 }
 
 h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1em;
+  background-color: #4caf50;
+  border-radius: 2px;
 }
 
 .loading,
 .error {
   text-align: center;
-  padding: 20px;
+  padding: 2rem;
   color: #666;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .thread-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1rem;
+  margin: 0 0.5rem;
+}
+
+.no-threads {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.95rem;
 }
 
 .thread-card {
-  background: white;
+  background: #f8f9fa;
   border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 0.5rem;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .thread-card:hover {
   transform: translateY(-2px);
+  border-color: #4caf50;
+  background: white;
 }
 
 .thread-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
 }
 
 .thread-header h3 {
   margin: 0;
-  color: #333;
-  font-size: 1.1em;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .thread-book {
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .thread-stats {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 1rem;
   color: #666;
-  font-size: 0.9em;
+  font-size: 0.9rem;
 }
 
 .stat {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.4rem;
+}
+
+.stat i {
+  color: #4caf50;
 }
 
 .thread-date {
   margin-left: auto;
   color: #888;
+  font-size: 0.85rem;
 }
 
-.no-threads {
-  text-align: center;
-  padding: 30px;
-  color: #666;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .thread-card {
+    padding: 1rem;
+  }
+
+  .thread-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .thread-header h3 {
+    font-size: 1rem;
+  }
+
+  .thread-book {
+    font-size: 0.85rem;
+  }
+
+  .thread-stats {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
 }
 </style>

@@ -74,97 +74,148 @@ onMounted(() => {
 
 <style scoped>
 .archive {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  height: 100%;
 }
 
 h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1em;
+  background-color: #4caf50;
+  border-radius: 2px;
 }
 
 .loading,
 .error {
   text-align: center;
-  padding: 20px;
+  padding: 2rem;
   color: #666;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .empty-archive {
   text-align: center;
-  padding: 40px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 3rem 2rem;
   color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.95rem;
 }
 
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
 }
 
 .book-card {
-  background: white;
+  background: #f8f9fa;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
   cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .book-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  border-color: #4caf50;
+  background: white;
 }
 
 .book-image {
-  width: 100%;
-  height: 250px;
+  position: relative;
+  padding-top: 140%;
+  background: #f1f1f1;
   overflow: hidden;
 }
 
 .book-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.book-card:hover .book-image img {
+  transform: scale(1.05);
 }
 
 .book-info {
-  padding: 15px;
+  padding: 1rem;
 }
 
 .book-title {
   margin: 0;
-  font-size: 1.1em;
-  color: #333;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2c3e50;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+  height: 2.8em;
+}
+
+.book-author {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #666;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.book-author {
-  margin: 5px 0 0;
-  font-size: 0.9em;
-  color: #666;
+@media (max-width: 1400px) {
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.25rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    padding: 10px;
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
   }
 
-  .book-image {
-    height: 200px;
+  .book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
   }
 
   .book-info {
-    padding: 10px;
+    padding: 0.75rem;
+  }
+
+  .book-title {
+    font-size: 0.9rem;
+  }
+
+  .book-author {
+    font-size: 0.8rem;
   }
 }
 </style>
