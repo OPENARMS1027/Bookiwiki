@@ -5,14 +5,19 @@
       추천 스레드
     </h2>
     <p class="section-description">
-      <div v-if="store.isLogin">
-        관심 장르를 바탕으로 최근 스레드를 추천해드려요
+      <div v-if="userStore.isLogin">
+        <template v-if="userStore.thisUser?.interested_category?.length">
+          관심 장르를 바탕으로 최근 스레드를 추천해드려요
+        </template>
+        <template v-else>
+          관심 장르를 추가하면 더 정확한 추천이 가능해요!
+        </template>
       </div>
       <div v-else>
         <span class="login-text" @click="goToLogin">로그인</span>하면 관심 장르를 바탕으로 최근 스레드를 추천해드려요
       </div>
     </p>
-    <div v-if="store.isLogin" class="thread-grid">
+    <div v-if="userStore.isLogin" class="thread-grid">
       <RouterLink
         v-for="thread in threadList"
         :key="thread.id"
@@ -39,32 +44,62 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, watchEffect } from "vue"
 import { RouterLink } from "vue-router"
 import { useBookStore } from "@/stores/book.js"
 import { useUserStore } from "@/stores/user.js"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
-const store = useUserStore()
+const userStore = useUserStore()
 const bookStore = useBookStore()
-const interestedCategory = [1, 2]
 const threadList = ref([])
+const user = ref(null)
+const interestedCategory = ref([])
+
 
 const goToLogin = () => {
   router.push({ name: 'login' })
 }
 
-onMounted(() => {
-  if (store.isLogin) {
-    bookStore.getThreads()
+const updateThreadList = () => {
+  if (!bookStore.threads || !user.value) return
+
+  if (user.value?.interested_category?.length) {
     threadList.value = bookStore.threads
-      .filter((thread) => interestedCategory.includes(thread.book.category))
-      .sort(
-        (a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-      )
+      .filter(thread => {
+        return interestedCategory.value.includes(thread.book?.category)
+      })
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
       .slice(0, 6)
+  } else {
+    threadList.value = [...bookStore.threads]
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+      .slice(0, 6)
+  }
+}
+
+onMounted(async () => {
+  if (userStore.isLogin) {
+    try {
+      await Promise.all([
+        userStore.getThisUser(),
+        bookStore.getThreads()
+      ])
+      if (userStore.thisUser) {
+        user.value = userStore.thisUser
+        interestedCategory.value = user.value.interested_category.map(item => item.id)
+      }
+      updateThreadList()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+})
+
+watchEffect(() => {
+  if (userStore.isLogin && bookStore.threads.length > 0 && user.value) {
+    updateThreadList()
   }
 })
 </script>
