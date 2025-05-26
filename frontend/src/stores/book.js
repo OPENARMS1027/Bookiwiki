@@ -43,9 +43,9 @@ export const useBookStore = defineStore('book', () => {
     axios({
       method: 'GET',
       url: 'http://localhost:8000/threads/',
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
+      // headers: {
+      //   Authorization: `Token ${userStore.token}`,
+      // },
     }).then((response) => {
       // console.log(response.data)
       threads.value = response.data
@@ -70,9 +70,9 @@ export const useBookStore = defineStore('book', () => {
     return axios({
       method: 'get',
       url: `http://localhost:8000/threads/${threadId}/`,
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
+      // headers: {
+      //   Authorization: `Token ${userStore.token}`,
+      // },
     })
       .then((response) => {
         return response.data
@@ -121,10 +121,10 @@ export const useBookStore = defineStore('book', () => {
         data: threadData,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${userStore.token}`
-        }
+          Authorization: `Token ${userStore.token}`,
+        },
       })
-      return response.data.id 
+      return response.data.id
     } catch (error) {
       // console.error('스레드 생성 오류:', error.response?.data || error)
       throw error
