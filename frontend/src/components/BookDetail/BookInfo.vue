@@ -144,41 +144,42 @@ const moveToAdd = async (bookId) => {
 </script>
 
 <style scoped>
-.button-group {
-  display: flex;
-  gap: 8px; /* 버튼 간 여백 조정 */
-}
-
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
-  text-align: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .book-title {
   font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  color: #333;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  flex: 1;
 }
 
 .button-group {
   display: flex;
   gap: 1rem;
-  justify-content: center;
-  margin-top: 1rem;
 }
 
 .add-button,
 .thread-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
+  padding: 0.8rem 1.5rem;
   border-radius: 8px;
+  font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  border: none;
 }
 
 .add-button {
@@ -188,72 +189,135 @@ const moveToAdd = async (bookId) => {
 
 .add-button:hover {
   background-color: #45a049;
+  transform: translateY(-2px);
 }
 
 .thread-button {
-  background-color: #2196f3;
-  color: white;
+  background-color: white;
+  color: #4caf50;
+  border: 2px solid #4caf50;
 }
 
 .thread-button:hover {
-  background-color: #1976d2;
-}
-
-.login-message {
-  margin-top: 1rem;
-  color: #666;
-}
-
-.login-link {
-  color: #2196f3;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.login-link:hover {
-  text-decoration: underline;
+  background-color: #4caf50;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .book-info {
   display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
-  background-color: white;
+  gap: 3rem;
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.book-image {
+  flex-shrink: 0;
 }
 
 .book-image img {
-  max-width: 300px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.book-image img:hover {
+  transform: scale(1.02);
 }
 
 .book-text {
   flex: 1;
-  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .book-text p {
-  margin-bottom: 1.5rem;
-  color: #444;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.book-text span {
+  display: grid;
+  gap: 1rem;
+  font-size: 1.05rem;
+  color: #666;
 }
 
 .book-text strong {
-  color: #333;
-  margin-right: 0.5rem;
+  color: #4caf50;
+  display: inline-block;
+  width: 80px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .book-info {
     flex-direction: column;
     align-items: center;
+    gap: 2rem;
   }
 
   .book-image img {
-    max-width: 100%;
-    margin-bottom: 1.5rem;
+    width: 250px;
+  }
+
+  .book-text {
+    text-align: center;
+  }
+
+  .book-text span {
+    justify-items: center;
+  }
+
+  .book-text strong {
+    width: auto;
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .book-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .button-group {
+    width: 100%;
+  }
+
+  .add-button,
+  .thread-button {
+    flex: 1;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .book-info {
+    padding: 1rem;
+  }
+
+  .book-image img {
+    width: 200px;
+  }
+
+  .book-text p {
+    font-size: 1rem;
+  }
+
+  .book-text span {
+    font-size: 0.95rem;
   }
 }
 </style>

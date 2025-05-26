@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h1>스레드 목록</h1>
         <ThreadList />
     </div>
 </template>
