@@ -6,18 +6,25 @@
         댓글
       </h3>
     </div>
-    <div class="comment-form">
-      <input
-        v-model="commentContent"
-        type="text"
-        placeholder="댓글을 입력하세요"
-        class="comment-input"
-        @keyup.enter="submitComment"
-      />
-      <button @click="submitComment" class="submit-button">
-        <font-awesome-icon :icon="['fas', 'paper-plane']" />
-      </button>
-    </div>
+    <template v-if="userStore.isLogin">
+      <div class="comment-form">
+        <input
+          v-model="commentContent"
+          type="text"
+          placeholder="댓글을 입력하세요"
+          class="comment-input"
+          @keyup.enter="submitComment"
+        />
+        <button @click="submitComment" class="submit-button">
+          <font-awesome-icon :icon="['fas', 'paper-plane']" />
+        </button>
+      </div>
+    </template>
+    <template v-else>
+      <div class="login-message">
+        <RouterLink :to="{ name: 'login' }" class="login-link">로그인</RouterLink>하고 댓글을 작성해보세요!
+      </div>
+    </template>
     <div class="comment-list">
       <div v-for="comment in comments" :key="comment.id" class="comment-item">
         <div class="comment-content">
@@ -34,7 +41,7 @@
         </div>
         <div
           class="comment-actions"
-          v-if="userStore.thisUser.id === comment.user"
+          v-if="userStore.thisUser && userStore.thisUser.id === comment.user"
         >
           <button
             v-if="editingCommentId !== comment.id"
@@ -64,6 +71,7 @@ import { ref, onMounted } from 'vue'
 import { useBookStore } from '@/stores/book'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
   threadId: {
@@ -144,6 +152,26 @@ const deleteComment = (commentId) => {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
+}
+
+.login-message {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(76, 175, 80, 0.05);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.login-link {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0 0.3rem;
+}
+
+.login-link:hover {
+  text-decoration: underline;
 }
 
 .comment-form {
