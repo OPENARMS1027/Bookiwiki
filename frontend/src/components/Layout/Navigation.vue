@@ -15,7 +15,8 @@
         <font-awesome-icon :icon="['fas', 'search']" />
         <span>도서 검색</span>
       </RouterLink>
-      <RouterLink :to="{ name: 'myPage' }" class="nav-link">
+      <!-- 로그인 상태일 때만 마이페이지 표시 -->
+      <RouterLink v-if="userStore.isLogin" :to="{ name: 'myPage' }" class="nav-link">
         <font-awesome-icon :icon="['fas', 'user']" />
         <span>마이페이지</span>
       </RouterLink>
