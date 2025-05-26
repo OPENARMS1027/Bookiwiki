@@ -29,20 +29,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useBookStore } from "@/stores/book.js";
-import { RouterLink } from "vue-router";
+import { ref, computed, watch } from 'vue'
+import { useBookStore } from '@/stores/book.js'
+import { RouterLink } from 'vue-router'
 
 const store = useBookStore();
 const bestSellers = ref([]);
 
-onMounted(() => {
-  store.getBooks();
+const updateBestSellers = () => {
   bestSellers.value = store.books
     .filter((book) => book.best_rank)
     .sort((a, b) => a.best_rank - b.best_rank)
-    .slice(0, 5);
-});
+    .slice(0, 5)
+}
+
+watch(() => store.books, updateBestSellers, { immediate: true })
+
+store.getBooks()
 </script>
 
 <style scoped>

@@ -20,7 +20,7 @@
         <span>마이페이지</span>
       </RouterLink>
       <div class="auth-links">
-        <RouterLink :to="{ name: '' }" class="nav-link">로그인</RouterLink>
+        <RouterLink :to="{ name: 'login' }" class="nav-link">로그인</RouterLink>
         <span class="divider">|</span>
         <RouterLink :to="{ name: '' }" class="nav-link">로그아웃</RouterLink>
       </div>
