@@ -127,8 +127,10 @@
 import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 const store = useUserStore()
+const router = useRouter()
 
 const username = ref('')
 const password1 = ref('')
@@ -147,6 +149,46 @@ const onFileChange = (e) => {
 }
 
 const onSignUp = async () => {
+  // 필수 입력값 검사
+  if (!username.value) {
+    alert('아이디를 입력해주세요.')
+    return
+  }
+  if (!password1.value) {
+    alert('비밀번호를 입력해주세요.')
+    return
+  }
+  if (!password2.value) {
+    alert('비밀번호 확인을 입력해주세요.')
+    return
+  }
+  if (password1.value !== password2.value) {
+    alert('비밀번호가 일치하지 않습니다.')
+    password1.value = ''
+    password2.value = ''
+    return
+  }
+  if (!gender.value) {
+    alert('성별을 선택해주세요.')
+    return
+  }
+  if (!age.value) {
+    alert('나이를 입력해주세요.')
+    return
+  }
+  if (interested_category.value.length === 0) {
+    alert('관심 카테고리를 하나 이상 선택해주세요.')
+    return
+  }
+  if (!week_avg_time.value) {
+    alert('주간 평균 독서 시간을 입력해주세요.')
+    return
+  }
+  if (!year_avg_time.value) {
+    alert('연간 평균 독서 시간을 입력해주세요.')
+    return
+  }
+
   const formData = new FormData()
   formData.append('username', username.value)
   formData.append('password1', password1.value)
@@ -162,7 +204,30 @@ const onSignUp = async () => {
     formData.append('interested_category', id)
   })
 
-  store.signup(formData)
+  try {
+    const response = await axios({
+      method: 'post',
+      url: 'http://127.0.0.1:8000/accounts/signup/',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    if (response.data.username) {
+      alert('이미 사용 중인 아이디입니다.')
+      username.value = ''
+    } else {
+      alert('회원가입이 완료되었습니다.')
+      router.push({ name: 'login' })
+    }
+  } catch (error) {
+    if (error.response?.data?.username) {
+      alert('이미 사용 중인 아이디입니다.')
+      username.value = ''
+    } else {
+      alert('회원가입에 실패했습니다. 입력하신 정보를 확인해주세요.')
+    }
+  }
 }
 
 // 카테고리 목록 불러오기
