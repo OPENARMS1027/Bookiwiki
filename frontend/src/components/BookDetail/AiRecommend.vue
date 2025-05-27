@@ -1,9 +1,5 @@
 <template>
   <div class="recommend-container" v-if="book">
-    <div class="ai-badge">
-      <i class="fas fa-robot"></i>
-      AI 도서 추천
-    </div>
     <!-- 작가의 다른 책 추천 -->
     <div class="recommend-section">
       <h3 class="section-title">
@@ -24,8 +20,7 @@
             :key="recommendBook.id"
             class="book-card"
             v-show="
-              index >= authorCurrentIndex &&
-              index < authorCurrentIndex + itemsToShow
+              index >= authorCurrentIndex && index < authorCurrentIndex + 3
             "
             @click="moveToBook(recommendBook.id)"
           >
@@ -47,7 +42,7 @@
         <button
           class="nav-button next"
           @click="scrollAuthorBooks('next')"
-          :disabled="authorCurrentIndex >= authorBooks.length - itemsToShow"
+          :disabled="authorCurrentIndex >= authorBooks.length - 3"
         >
           <i class="fas fa-chevron-right"></i>
         </button>
@@ -75,8 +70,7 @@
             :key="recommendBook.id"
             class="book-card"
             v-show="
-              index >= categoryCurrentIndex &&
-              index < categoryCurrentIndex + itemsToShow
+              index >= categoryCurrentIndex && index < categoryCurrentIndex + 3
             "
             @click="moveToBook(recommendBook.id)"
           >
@@ -98,7 +92,7 @@
         <button
           class="nav-button next"
           @click="scrollCategoryBooks('next')"
-          :disabled="categoryCurrentIndex >= categoryBooks.length - itemsToShow"
+          :disabled="categoryCurrentIndex >= categoryBooks.length - 3"
         >
           <i class="fas fa-chevron-right"></i>
         </button>
@@ -120,9 +114,6 @@ const props = defineProps({
 const router = useRouter();
 const store = useBookStore();
 const books = computed(() => store.books);
-
-// 한 번에 보여줄 아이템 수
-const itemsToShow = 3;
 
 // 현재 인덱스 관리
 const authorCurrentIndex = ref(0);
@@ -160,13 +151,13 @@ const categoryBooks = computed(() => {
 
 // 자동 스크롤 시작
 const startAutoScroll = () => {
-  if (authorBooks.value.length > itemsToShow) {
+  if (authorBooks.value.length > 3) {
     authorScrollTimer.value = setInterval(() => {
       scrollAuthorBooks("next", true);
     }, scrollInterval);
   }
 
-  if (categoryBooks.value.length > itemsToShow) {
+  if (categoryBooks.value.length > 3) {
     categoryScrollTimer.value = setInterval(() => {
       scrollCategoryBooks("next", true);
     }, scrollInterval);
@@ -193,20 +184,20 @@ const scrollAuthorBooks = (direction, isAuto = false) => {
   isAnimating.value = true;
   setTimeout(() => {
     isAnimating.value = false;
-  }, 600); // transition duration과 동일하게 설정
+  }, 600);
 
   const bookList = document.querySelector(".book-list");
   if (direction === "next") {
-    if (authorCurrentIndex.value >= authorBooks.value.length - itemsToShow) {
+    if (authorCurrentIndex.value >= authorBooks.value.length - 3) {
       authorCurrentIndex.value = 0;
     } else {
-      authorCurrentIndex.value += 1;
+      authorCurrentIndex.value += 3;
     }
   } else if (direction === "prev") {
     if (authorCurrentIndex.value <= 0) {
-      authorCurrentIndex.value = authorBooks.value.length - itemsToShow;
+      authorCurrentIndex.value = Math.max(0, authorBooks.value.length - 3);
     } else {
-      authorCurrentIndex.value -= 1;
+      authorCurrentIndex.value = Math.max(0, authorCurrentIndex.value - 3);
     }
   }
 
@@ -231,19 +222,16 @@ const scrollCategoryBooks = (direction, isAuto = false) => {
 
   const bookList = document.querySelector(".book-list");
   if (direction === "next") {
-    if (
-      categoryCurrentIndex.value >=
-      categoryBooks.value.length - itemsToShow
-    ) {
+    if (categoryCurrentIndex.value >= categoryBooks.value.length - 3) {
       categoryCurrentIndex.value = 0;
     } else {
-      categoryCurrentIndex.value += 1;
+      categoryCurrentIndex.value += 3;
     }
   } else if (direction === "prev") {
     if (categoryCurrentIndex.value <= 0) {
-      categoryCurrentIndex.value = categoryBooks.value.length - itemsToShow;
+      categoryCurrentIndex.value = Math.max(0, categoryBooks.value.length - 3);
     } else {
-      categoryCurrentIndex.value -= 1;
+      categoryCurrentIndex.value = Math.max(0, categoryCurrentIndex.value - 3);
     }
   }
 
@@ -319,7 +307,7 @@ watch(
   top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+  background: linear-gradient(135deg, #4caf50, #45a049);
   color: white;
   padding: 8px 20px;
   border-radius: 20px;
@@ -344,7 +332,7 @@ watch(
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 24px;
+  padding: 0;
 }
 
 .section-title i {
@@ -357,7 +345,7 @@ watch(
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 36px;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -367,7 +355,8 @@ watch(
   position: relative;
   width: 100%;
   min-height: 260px;
-  margin: 0 auto;
+  margin: 0;
+  padding: 0 20px;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
@@ -477,11 +466,11 @@ watch(
 }
 
 .nav-button.prev {
-  left: 0;
+  left: 20px;
 }
 
 .nav-button.next {
-  right: 0;
+  right: 20px;
 }
 
 .no-results {
@@ -491,7 +480,7 @@ watch(
   font-size: 1rem;
   background-color: #f8f9fa;
   border-radius: 8px;
-  margin: 0 36px;
+  margin: 0 20px;
 }
 
 @media (max-width: 1024px) {
@@ -511,13 +500,12 @@ watch(
   }
 
   .section-title {
-    padding: 0 16px;
     font-size: 1.1rem;
     margin-bottom: 16px;
   }
 
-  .book-list-container {
-    padding: 0 24px;
+  .book-list {
+    padding: 0 16px;
   }
 
   .book-card {
@@ -540,6 +528,18 @@ watch(
   .nav-button {
     width: 32px;
     height: 32px;
+  }
+
+  .nav-button.prev {
+    left: 16px;
+  }
+
+  .nav-button.next {
+    right: 16px;
+  }
+
+  .no-results {
+    margin: 0 16px;
   }
 }
 </style>
