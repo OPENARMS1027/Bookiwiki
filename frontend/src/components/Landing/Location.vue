@@ -29,7 +29,7 @@
             <i class="fas fa-info-circle"></i>
             <p>검색된 도서관이 없습니다</p>
           </div>
-          <ul v-else>
+          <ul v-else class="ul">
             <li v-for="(place, index) in places" :key="index" class="library-item">
               <div class="library-info">
                 <h4>{{ place.name }}</h4>
@@ -201,7 +201,7 @@ onMounted(() => {
 
 .map-overlay {
   position: absolute;
-  top: 1rem;
+  bottom: 1rem;
   left: 1rem;
   z-index: 1;
 }
@@ -251,7 +251,7 @@ onMounted(() => {
 .list-content {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
 }
 
 .no-results {
@@ -274,7 +274,7 @@ onMounted(() => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   transition: background-color 0.3s ease;
   gap: 1rem;
@@ -336,6 +336,10 @@ onMounted(() => {
 .directions-button:hover {
   background-color: #43a047;
   transform: translateY(-2px);
+}
+
+.ul {
+  padding:0
 }
 
 @media (max-width: 1200px) {
