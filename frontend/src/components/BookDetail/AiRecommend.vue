@@ -109,44 +109,44 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
-import { useBookStore } from "@/stores/book";
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useBookStore } from '@/stores/book'
 
 const props = defineProps({
   book: Object,
-});
+})
 
-const router = useRouter();
-const store = useBookStore();
-const books = computed(() => store.books);
+const router = useRouter()
+const store = useBookStore()
+const books = computed(() => store.books)
 
 // 한 번에 보여줄 아이템 수
-const itemsToShow = 3;
+const itemsToShow = 3
 
 // 현재 인덱스 관리
-const authorCurrentIndex = ref(0);
-const categoryCurrentIndex = ref(0);
+const authorCurrentIndex = ref(0)
+const categoryCurrentIndex = ref(0)
 
 // 자동 스크롤 타이머
-const authorScrollTimer = ref(null);
-const categoryScrollTimer = ref(null);
-const scrollInterval = 6000; // 6초마다 스크롤
+const authorScrollTimer = ref(null)
+const categoryScrollTimer = ref(null)
+const scrollInterval = 6000 // 6초마다 스크롤
 
 // 애니메이션 상태
-const isAnimating = ref(false);
+const isAnimating = ref(false)
 
 // 작가의 다른 책 필터링
 const authorBooks = computed(() => {
-  if (!props.book || !books.value) return [];
+  if (!props.book || !books.value) return []
   return books.value
     .filter((b) => b.author === props.book.author && b.id !== props.book.id)
-    .slice(0, 9); // 최대 9권까지 표시 (3의 배수)
-});
+    .slice(0, 9) // 최대 9권까지 표시 (3의 배수)
+})
 
 // 같은 카테고리 책 필터링
 const categoryBooks = computed(() => {
-  if (!props.book || !books.value) return [];
+  if (!props.book || !books.value) return []
   return books.value
     .filter(
       (b) =>
@@ -155,145 +155,145 @@ const categoryBooks = computed(() => {
         b.author !== props.book.author
     )
     .sort(() => Math.random() - 0.5) // 랜덤 정렬
-    .slice(0, 9); // 최대 9권까지 표시 (3의 배수)
-});
+    .slice(0, 9) // 최대 9권까지 표시 (3의 배수)
+})
 
 // 자동 스크롤 시작
 const startAutoScroll = () => {
   if (authorBooks.value.length > itemsToShow) {
     authorScrollTimer.value = setInterval(() => {
-      scrollAuthorBooks("next", true);
-    }, scrollInterval);
+      scrollAuthorBooks('next', true)
+    }, scrollInterval)
   }
 
   if (categoryBooks.value.length > itemsToShow) {
     categoryScrollTimer.value = setInterval(() => {
-      scrollCategoryBooks("next", true);
-    }, scrollInterval);
+      scrollCategoryBooks('next', true)
+    }, scrollInterval)
   }
-};
+}
 
 // 자동 스크롤 정지
 const stopAutoScroll = () => {
   if (authorScrollTimer.value) {
-    clearInterval(authorScrollTimer.value);
-    authorScrollTimer.value = null;
+    clearInterval(authorScrollTimer.value)
+    authorScrollTimer.value = null
   }
   if (categoryScrollTimer.value) {
-    clearInterval(categoryScrollTimer.value);
-    categoryScrollTimer.value = null;
+    clearInterval(categoryScrollTimer.value)
+    categoryScrollTimer.value = null
   }
-};
+}
 
 // 작가 책 목록 스크롤
 const scrollAuthorBooks = (direction, isAuto = false) => {
-  if (isAnimating.value && !isAuto) return;
-  if (!isAuto) stopAutoScroll();
+  if (isAnimating.value && !isAuto) return
+  if (!isAuto) stopAutoScroll()
 
-  isAnimating.value = true;
+  isAnimating.value = true
   setTimeout(() => {
-    isAnimating.value = false;
-  }, 600); // transition duration과 동일하게 설정
+    isAnimating.value = false
+  }, 600) // transition duration과 동일하게 설정
 
-  const bookList = document.querySelector(".book-list");
-  if (direction === "next") {
+  const bookList = document.querySelector('.book-list')
+  if (direction === 'next') {
     if (authorCurrentIndex.value >= authorBooks.value.length - itemsToShow) {
-      authorCurrentIndex.value = 0;
+      authorCurrentIndex.value = 0
     } else {
-      authorCurrentIndex.value += 1;
+      authorCurrentIndex.value += 1
     }
-  } else if (direction === "prev") {
+  } else if (direction === 'prev') {
     if (authorCurrentIndex.value <= 0) {
-      authorCurrentIndex.value = authorBooks.value.length - itemsToShow;
+      authorCurrentIndex.value = authorBooks.value.length - itemsToShow
     } else {
-      authorCurrentIndex.value -= 1;
+      authorCurrentIndex.value -= 1
     }
   }
 
   if (bookList) {
-    bookList.style.setProperty("--slide-index", authorCurrentIndex.value);
+    bookList.style.setProperty('--slide-index', authorCurrentIndex.value)
   }
 
   if (!isAuto) {
-    setTimeout(startAutoScroll, 600);
+    setTimeout(startAutoScroll, 600)
   }
-};
+}
 
 // 카테고리 책 목록 스크롤
 const scrollCategoryBooks = (direction, isAuto = false) => {
-  if (isAnimating.value && !isAuto) return;
-  if (!isAuto) stopAutoScroll();
+  if (isAnimating.value && !isAuto) return
+  if (!isAuto) stopAutoScroll()
 
-  isAnimating.value = true;
+  isAnimating.value = true
   setTimeout(() => {
-    isAnimating.value = false;
-  }, 600);
+    isAnimating.value = false
+  }, 600)
 
-  const bookList = document.querySelector(".book-list");
-  if (direction === "next") {
+  const bookList = document.querySelector('.book-list')
+  if (direction === 'next') {
     if (
       categoryCurrentIndex.value >=
       categoryBooks.value.length - itemsToShow
     ) {
-      categoryCurrentIndex.value = 0;
+      categoryCurrentIndex.value = 0
     } else {
-      categoryCurrentIndex.value += 1;
+      categoryCurrentIndex.value += 1
     }
-  } else if (direction === "prev") {
+  } else if (direction === 'prev') {
     if (categoryCurrentIndex.value <= 0) {
-      categoryCurrentIndex.value = categoryBooks.value.length - itemsToShow;
+      categoryCurrentIndex.value = categoryBooks.value.length - itemsToShow
     } else {
-      categoryCurrentIndex.value -= 1;
+      categoryCurrentIndex.value -= 1
     }
   }
 
   if (bookList) {
-    bookList.style.setProperty("--slide-index", categoryCurrentIndex.value);
+    bookList.style.setProperty('--slide-index', categoryCurrentIndex.value)
   }
 
   if (!isAuto) {
-    setTimeout(startAutoScroll, 600);
+    setTimeout(startAutoScroll, 600)
   }
-};
+}
 
 // 책 상세 페이지로 이동
 const moveToBook = async (bookId) => {
-  stopAutoScroll();
+  stopAutoScroll()
   try {
     await router.push({
       path: `/books/${bookId}`,
-    });
+    })
   } catch (err) {
-    console.error("라우터 에러:", err);
+    console.error('라우터 에러:', err)
   }
-};
+}
 
 // 컴포넌트 마운트/언마운트 처리
 onMounted(() => {
   if (props.book && (!books.value || !books.value.length)) {
     store.getBooks().then(() => {
-      startAutoScroll();
-    });
+      startAutoScroll()
+    })
   } else {
-    startAutoScroll();
+    startAutoScroll()
   }
-});
+})
 
 onUnmounted(() => {
-  stopAutoScroll();
-});
+  stopAutoScroll()
+})
 
 // 책 데이터 변경 감지
 watch(
   () => props.book,
   async () => {
     if (props.book && (!books.value || !books.value.length)) {
-      await store.getBooks();
-      startAutoScroll();
+      await store.getBooks()
+      startAutoScroll()
     }
   },
   { immediate: true }
-);
+)
 </script>
 
 <style scoped>
@@ -319,7 +319,7 @@ watch(
   top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+  background: linear-gradient(135deg, #4caf50, #45a049);
   color: white;
   padding: 8px 20px;
   border-radius: 20px;

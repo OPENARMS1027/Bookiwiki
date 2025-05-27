@@ -87,9 +87,9 @@ export const useBookStore = defineStore('book', () => {
     axios({
       method: 'delete',
       url: `http://localhost:8000/threads/${threadId}/`,
-      headers : {
-        Authorization : `Token ${userStore.token}`,
-      }
+      headers: {
+        Authorization: `Token ${userStore.token}`,
+      },
     })
       .then((response) => {
         console.log(response)

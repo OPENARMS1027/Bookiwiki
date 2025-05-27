@@ -1,6 +1,7 @@
 <template>
   <div class="landing-container">
     <MainView />
+    <Recommend />
     <div class="content-section">
       <section class="section">
         <BestSeller />
@@ -19,11 +20,12 @@
 </template>
 
 <script setup>
-import MainView from "@/components/Landing/MainView.vue";
-import BestSeller from "@/components/Landing/BestSeller.vue";
-import CategoryBooks from "@/components/Landing/CategoryBooks.vue";
-import ThreadList from "@/components/Landing/ThreadList.vue";
-import Location from "@/components/Landing/Location.vue";
+import MainView from '@/components/Landing/MainView.vue'
+import Recommend from '@/components/Landing/Recommend.vue'
+import BestSeller from '@/components/Landing/BestSeller.vue'
+import CategoryBooks from '@/components/Landing/CategoryBooks.vue'
+import ThreadList from '@/components/Landing/ThreadList.vue'
+import Location from '@/components/Landing/Location.vue'
 </script>
 
 <style scoped>

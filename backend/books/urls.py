@@ -14,4 +14,5 @@ urlpatterns = [
     path("userbooks/check/<int:book_id>/", views.check_user_book),
     path("userbooks/<int:book_id>/", views.remove_from_user_books),
     path("my-threads/", views.my_thread_list),
+    path('aladin/search/', views.aladin_search),
 ]

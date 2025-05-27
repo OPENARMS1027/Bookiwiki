@@ -82,9 +82,11 @@ export const useUserStore = defineStore(
       return axios({
         method: 'get',
         url: `http://127.0.0.1:8000/user/${userId}/`,
-        headers: token.value ? {
-          Authorization: `Token ${token.value}`
-        } : {}
+        headers: token.value
+          ? {
+              Authorization: `Token ${token.value}`,
+            }
+          : {},
       })
         .then((response) => {
           // 팔로우 상태를 저장
@@ -98,7 +100,7 @@ export const useUserStore = defineStore(
 
     const getThisUser = () => {
       if (token.value) {
-        axios({
+        return axios({
           method: 'get',
           url: 'http://127.0.0.1:8000/user/me/',
           headers: {
@@ -107,11 +109,14 @@ export const useUserStore = defineStore(
         })
           .then((response) => {
             thisUser.value = response.data
+            return response.data
           })
           .catch((err) => {
             console.log(err)
+            throw err
           })
       }
+      return Promise.reject(new Error('No token available'))
     }
 
     const followUser = (userId) => {
