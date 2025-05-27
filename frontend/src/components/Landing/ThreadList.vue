@@ -69,7 +69,10 @@ const goToLogin = () => {
 
 const updateThreadList = async () => {
   try {
-    if (!user.value) {
+    isLoading.value = true
+
+    // 유저 정보가 없으면 가져오기
+    if (!user.value && userStore.isLogin) {
       await userStore.getThisUser()
       if (userStore.thisUser) {
         user.value = userStore.thisUser
@@ -77,68 +80,65 @@ const updateThreadList = async () => {
       }
     }
 
+    // 스레드 데이터가 없으면 가져오기
     if (!bookStore.threads?.length) {
       await bookStore.getThreads()
     }
 
-    if (!bookStore.threads || !user.value) {
-      return
-    }
-
-    if (user.value?.interested_category?.length) {
-      const filtered = bookStore.threads
+    // 유저가 로그인했고 관심 카테고리가 있는 경우
+    if (userStore.isLogin && user.value?.interested_category?.length) {
+      threadList.value = bookStore.threads
         .filter(thread => {
-          const isIncluded = interestedCategory.value.includes(thread.book?.category)
-          return isIncluded
+          return interestedCategory.value.includes(thread.book?.category)
         })
         .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
         .slice(0, 6)
-      threadList.value = filtered
-    } else {
+    } else if (userStore.isLogin) {
+      // 로그인은 했지만 관심 카테고리가 없는 경우
       threadList.value = [...bookStore.threads]
         .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
         .slice(0, 6)
+    } else {
+      // 로그인하지 않은 경우
+      threadList.value = []
     }
-    isLoading.value = false
   } catch (error) {
-    console.error(error)
+    console.error('스레드 업데이트 중 에러:', error)
+  } finally {
     isLoading.value = false
   }
 }
 
-watch(() => userStore.thisUser, (newUser) => {
-  if (newUser) {
-    user.value = newUser
-    interestedCategory.value = newUser.interested_category.map(item => item.id)
-    updateThreadList()
+// 로그인 상태 변경 감지
+watch(() => userStore.isLogin, async (newLoginState) => {
+  if (newLoginState) {
+    await updateThreadList()
+  } else {
+    user.value = null
+    interestedCategory.value = []
+    threadList.value = []
   }
 }, { immediate: true })
 
-watch(() => bookStore.threads, (newThreads) => {
-  if (newThreads?.length > 0) {
-    updateThreadList()
+// 유저 정보 변경 감지
+watch(() => userStore.thisUser, async (newUser) => {
+  if (newUser) {
+    user.value = newUser
+    interestedCategory.value = newUser.interested_category.map(item => item.id)
+    await updateThreadList()
+  }
+}, { immediate: true })
+
+// 스레드 데이터 변경 감지
+watch(() => bookStore.threads, async (newThreads) => {
+  if (newThreads?.length > 0 && userStore.isLogin) {
+    await updateThreadList()
   }
 }, { immediate: true })
 
 onMounted(async () => {
   if (userStore.isLogin) {
-    try {
-      isLoading.value = true     
-      await userStore.getThisUser()
-      
-      if (userStore.thisUser) {
-        user.value = userStore.thisUser
-        interestedCategory.value = user.value.interested_category.map(item => item.id)
-      }
-
-      if (!bookStore.threads?.length) {
-        await bookStore.getThreads()
-      }
-      
-      await updateThreadList()
-    } catch (error) {
-      console.error(error)
-    }
+    await updateThreadList()
   }
 })
 </script>
