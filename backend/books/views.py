@@ -14,6 +14,7 @@ from .serializers import (
 )
 import requests
 import json
+from django.conf import settings
 
 
 @api_view(["GET", "POST"])
@@ -205,7 +206,7 @@ def remove_from_user_books(request, book_id):
 @api_view(['GET'])
 def aladin_search(request):
     try:
-        ttbkey = 'ttbyena11171409001'
+        ttbkey = settings.ALADIN_TTBKEY
         query = request.GET.get('Query', '')
         
         response = requests.get('http://www.aladin.co.kr/ttb/api/ItemSearch.aspx', params={
