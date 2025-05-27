@@ -12,6 +12,9 @@ from .serializers import (
     CommentSerializer,
     ThreadCreateSerializer,
 )
+import requests
+import json
+from django.conf import settings
 
 
 @api_view(["GET", "POST"])
@@ -199,3 +202,43 @@ def remove_from_user_books(request, book_id):
             {'message': str(e)}, 
             status=status.HTTP_400_BAD_REQUEST
         )
+
+@api_view(['GET'])
+def aladin_search(request):
+    try:
+        ttbkey = settings.ALADIN_TTBKEY
+        query = request.GET.get('Query', '')
+        
+        response = requests.get('http://www.aladin.co.kr/ttb/api/ItemSearch.aspx', params={
+            'ttbkey': ttbkey,
+            'Query': query,
+            'QueryType': 'Title',
+            'MaxResults': 10,
+            'start': 1,
+            'output': 'js',
+            'Version': '20131101',
+            'Cover': 'Big',  # 큰 커버 이미지 요청
+            'OptResult': 'ratingInfo' # 추가 정보 요청
+        })
+        
+        # JSONP 응답 정제
+        jsonp_text = response.text
+        json_text = jsonp_text.replace('callback(', '').rstrip(');')
+        
+        # JSON 파싱
+        try:
+            data = json.loads(json_text)
+            if 'item' in data and isinstance(data['item'], list):
+                # 각 아이템의 이미지 URL 확인 및 수정
+                for item in data['item']:
+                    if 'cover' not in item or not item['cover']:
+                        item['cover'] = item.get('coverLargeUrl') or item.get('coverUrl')
+                return Response(data)
+            return Response({'item': []})
+        except json.JSONDecodeError as e:
+            print('JSON Decode Error:', str(e))
+            print('Response Text:', json_text)
+            return Response({'error': 'Invalid JSON response from Aladin API'}, status=500)
+            
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

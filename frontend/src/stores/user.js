@@ -100,21 +100,24 @@ export const useUserStore = defineStore(
 
     const getThisUser = () => {
       if (token.value) {
-        axios({
-          method: "get",
-          url: "http://127.0.0.1:8000/user/me/",
+        return axios({
+          method: 'get',
+          url: 'http://127.0.0.1:8000/user/me/',
           headers: {
             Authorization: `Token ${token.value}`,
           },
         })
           .then((response) => {
-            thisUser.value = response.data;
+            thisUser.value = response.data
+            return response.data
           })
           .catch((err) => {
-            console.log(err);
-          });
+            console.log(err)
+            throw err
+          })
       }
-    };
+      return Promise.reject(new Error('No token available'))
+    }
 
     const followUser = (userId) => {
       if (token.value) {
