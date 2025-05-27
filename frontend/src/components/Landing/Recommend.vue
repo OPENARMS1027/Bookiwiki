@@ -6,7 +6,9 @@
         <span> 추천 도서를 찾고 있습니다...</span>
       </div>
       <div v-else-if="!userStore.isLogin" class="login-prompt">
-        <p>로그인하고 맞춤 도서 추천을 받아보세요!</p>
+        <p>
+          <router-link to="/login" class="login-text">로그인</router-link>하고 맞춤 도서 추천을 받아보세요!
+        </p>
         <button @click="goToLogin" class="login-btn">로그인하기</button>
       </div>
       <div v-else-if="recommendedBooks.length === 0" class="no-books">
@@ -77,7 +79,7 @@ const loading = ref(true)
 const recommendedBooks = ref([])
 const currentBookIndex = ref(0)
 const autoSlideInterval = ref(null)
-const UPSTAGE_API_KEY = 'up_ixguEBsobJu0RL30AjrazNrD6OwqJ'
+const UPSTAGE_API_KEY = import.meta.env.VITE_UPSTAGE_API_KEY
 
 const currentBook = computed(() => {
   const book = recommendedBooks.value[currentBookIndex.value] || {}
@@ -406,6 +408,7 @@ watch(
   align-items: center;
   position: relative;
   overflow: visible;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .recommend-container {
@@ -425,10 +428,10 @@ watch(
 }
 
 .highlight {
-  background: linear-gradient(to right, #34d399, #3b82f6);
+  /* background: linear-gradient(to right, #34d399, #3b82f6); */
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  color: #4caf50;
   padding: 0 0.5rem;
 }
 
@@ -526,7 +529,7 @@ watch(
 
 .label {
   display: inline-block;
-  background: #34d399;
+  background: #4caf50;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -542,7 +545,6 @@ watch(
   margin: 0 0 1rem;
   line-height: 1.2;
   font-weight: 700;
-  color: #34d399;
 }
 
 .book-author {
@@ -564,7 +566,7 @@ watch(
 }
 
 .view-detail {
-  background: #34d399;
+  background: #4caf50;
   border: none;
   color: white;
   padding: 1rem 2rem;
@@ -573,13 +575,13 @@ watch(
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.2);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
 }
 
 .view-detail:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-  background: #3bebb0;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+  background: #66bb6a;
 }
 
 .slider-controls {
@@ -597,7 +599,7 @@ watch(
   position: absolute;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  color: #34d399;
+  color: #4caf50;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -620,7 +622,7 @@ watch(
 }
 
 .control-btn:hover:not(:disabled) {
-  background: #34d399;
+  background: #4caf50;
   color: white;
   transform: scale(1.1);
   border-color: transparent;
@@ -650,7 +652,7 @@ watch(
 }
 
 .dot.active {
-  background: #34d399;
+  background: #4caf50;
   transform: scale(1.3);
 }
 
@@ -661,12 +663,14 @@ watch(
   color: #1a1a1a;
   font-size: 1.2rem;
   padding: 4rem;
+  /* font-family: 'Pretendard', sans-serif; */
+
 }
 
 .login-btn {
   margin-top: 1.5rem;
   padding: 1rem 2.5rem;
-  background: linear-gradient(45deg, #34d399, #3b82f6);
+  background: #4caf50;
   color: white;
   border: none;
   border-radius: 30px;
@@ -674,12 +678,26 @@ watch(
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.2);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
 }
 
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+  background: #66bb6a;
+}
+
+.login-text {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  transition: color 0.3s ease;
+}
+
+.login-text:hover {
+  color: #66bb6a;
+  text-decoration: underline;
 }
 
 /* Slide Transitions */
