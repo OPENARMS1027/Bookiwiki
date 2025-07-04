@@ -118,7 +118,7 @@
   }
 
   .link-group {
-    text-align: left;
+    text-align: left
   }
 }
 </style>
