@@ -7,7 +7,8 @@
       </div>
       <div v-else-if="!userStore.isLogin" class="login-prompt">
         <p>
-          <router-link to="/login" class="login-text">로그인</router-link>하고 맞춤 도서 추천을 받아보세요!
+          <router-link to="/login" class="login-text">로그인</router-link>하고
+          맞춤 도서 추천을 받아보세요!
         </p>
         <button @click="goToLogin" class="login-btn">로그인하기</button>
       </div>
@@ -210,11 +211,14 @@ const getEmbeddings = async (texts) => {
 
 const getAladinBooks = async (query) => {
   try {
-    const response = await axios.get(`http://localhost:8000/aladin/search/`, {
-      params: {
-        Query: query,
-      },
-    })
+    const response = await axios.get(
+      `https://bookiwiki.onrender.com/aladin/search/`,
+      {
+        params: {
+          Query: query,
+        },
+      }
+    )
 
     const data = response.data
     console.log('Aladin API response:', data)
@@ -664,7 +668,6 @@ watch(
   font-size: 1.2rem;
   padding: 4rem;
   /* font-family: 'Pretendard', sans-serif; */
-
 }
 
 .login-btn {

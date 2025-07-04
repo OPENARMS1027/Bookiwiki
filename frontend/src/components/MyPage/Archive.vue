@@ -47,11 +47,14 @@ const error = ref(null)
 const fetchMyBooks = async () => {
   try {
     loading.value = true
-    const response = await axios.get('http://127.0.0.1:8000/user/me/', {
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
-    })
+    const response = await axios.get(
+      'https://bookiwiki.onrender.com/user/me/',
+      {
+        headers: {
+          Authorization: `Token ${userStore.token}`,
+        },
+      }
+    )
     if (response.data && response.data.books) {
       books.value = response.data.books
     }

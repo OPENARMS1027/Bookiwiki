@@ -71,92 +71,97 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
-import { useUserStore } from "@/stores/user";
-import axios from "axios";
+import { onMounted, ref, computed } from 'vue'
+import { useUserStore } from '@/stores/user'
+import axios from 'axios'
 
-const userStore = useUserStore();
-const genres = ref([]);
-const selectedGenres = ref([]);
-const initialGenres = ref([]);
+const userStore = useUserStore()
+const genres = ref([])
+const selectedGenres = ref([])
+const initialGenres = ref([])
 
 onMounted(async () => {
-  await userStore.getThisUser();
-  await fetchGenres();
-  await fetchUserGenres();
-});
+  await userStore.getThisUser()
+  await fetchGenres()
+  await fetchUserGenres()
+})
 
 const fetchGenres = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:8000/categories/");
-    genres.value = response.data;
+    const response = await axios.get(
+      'https://bookiwiki.onrender.com/categories/'
+    )
+    genres.value = response.data
   } catch (error) {
-    console.error("장르 목록을 불러오는데 실패했습니다:", error);
+    console.error('장르 목록을 불러오는데 실패했습니다:', error)
   }
-};
+}
 
 const fetchUserGenres = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:8000/user/me/", {
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
-    });
+    const response = await axios.get(
+      'https://bookiwiki.onrender.com/user/me/',
+      {
+        headers: {
+          Authorization: `Token ${userStore.token}`,
+        },
+      }
+    )
     selectedGenres.value = response.data.interested_category.map(
       (category) => category.id
-    );
-    initialGenres.value = [...selectedGenres.value];
+    )
+    initialGenres.value = [...selectedGenres.value]
   } catch (error) {
-    console.error("사용자 장르 정보를 불러오는데 실패했습니다:", error);
+    console.error('사용자 장르 정보를 불러오는데 실패했습니다:', error)
   }
-};
+}
 
 const toggleGenre = (genreId) => {
-  const index = selectedGenres.value.indexOf(genreId);
+  const index = selectedGenres.value.indexOf(genreId)
   if (index === -1) {
-    selectedGenres.value.push(genreId);
+    selectedGenres.value.push(genreId)
   } else {
-    selectedGenres.value.splice(index, 1);
+    selectedGenres.value.splice(index, 1)
   }
-};
+}
 
 const hasChanges = computed(() => {
-  if (selectedGenres.value.length !== initialGenres.value.length) return true;
-  return !selectedGenres.value.every((id) => initialGenres.value.includes(id));
-});
+  if (selectedGenres.value.length !== initialGenres.value.length) return true
+  return !selectedGenres.value.every((id) => initialGenres.value.includes(id))
+})
 
 const saveGenres = async () => {
   try {
     await axios.put(
-      "http://127.0.0.1:8000/user/me/",
+      'https://bookiwiki.onrender.com/user/me/',
       { interested_category: selectedGenres.value },
       {
         headers: {
           Authorization: `Token ${userStore.token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
-    );
-    initialGenres.value = [...selectedGenres.value];
-    alert("관심 장르가 성공적으로 저장되었습니다.");
+    )
+    initialGenres.value = [...selectedGenres.value]
+    alert('관심 장르가 성공적으로 저장되었습니다.')
   } catch (error) {
-    console.error("장르 저장에 실패했습니다:", error);
-    alert("장르 저장에 실패했습니다. 다시 시도해주세요.");
+    console.error('장르 저장에 실패했습니다:', error)
+    alert('장르 저장에 실패했습니다. 다시 시도해주세요.')
   }
-};
+}
 
 const getImageUrl = (profileImg) => {
-  if (!profileImg) return null;
-  if (profileImg.startsWith("http")) return profileImg;
-  return `http://127.0.0.1:8000/media/${profileImg}`;
-};
+  if (!profileImg) return null
+  if (profileImg.startsWith('http')) return profileImg
+  return `https://bookiwiki.onrender.com/media/${profileImg}`
+}
 
 const handleImageError = () => {
-  const defaultIcon = document.createElement("div");
-  defaultIcon.className = "default-profile-icon";
-  defaultIcon.innerHTML = "<font-awesome-icon :icon=\"['fas', 'user']\" />";
-  event.target.parentNode.replaceChild(defaultIcon, event.target);
-};
+  const defaultIcon = document.createElement('div')
+  defaultIcon.className = 'default-profile-icon'
+  defaultIcon.innerHTML = "<font-awesome-icon :icon=\"['fas', 'user']\" />"
+  event.target.parentNode.replaceChild(defaultIcon, event.target)
+}
 </script>
 
 <style scoped>

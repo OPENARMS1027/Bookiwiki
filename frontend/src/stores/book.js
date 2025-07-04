@@ -14,7 +14,7 @@ export const useBookStore = defineStore('book', () => {
   const getBooks = () => {
     axios({
       method: 'GET',
-      url: 'http://localhost:8000/books/',
+      url: 'https://bookiwiki.onrender.com/books/',
     })
       .then((response) => {
         // console.log(response.data)
@@ -27,7 +27,7 @@ export const useBookStore = defineStore('book', () => {
 
   const getCategories = () => {
     axios({
-      url: 'http://localhost:8000/categories/',
+      url: 'https://bookiwiki.onrender.com/categories/',
       method: 'GET',
     })
       .then((response) => {
@@ -42,7 +42,7 @@ export const useBookStore = defineStore('book', () => {
   const getThreads = () => {
     axios({
       method: 'GET',
-      url: 'http://localhost:8000/threads/',
+      url: 'https://bookiwiki.onrender.com/threads/',
       // headers: {
       //   Authorization: `Token ${userStore.token}`,
       // },
@@ -55,7 +55,7 @@ export const useBookStore = defineStore('book', () => {
   const getBook = (bookId) => {
     return axios({
       method: 'get',
-      url: `http://localhost:8000/books/${bookId}/`,
+      url: `https://bookiwiki.onrender.com/books/${bookId}/`,
     })
       .then((response) => {
         return response.data
@@ -69,7 +69,7 @@ export const useBookStore = defineStore('book', () => {
   const getThread = (threadId) => {
     return axios({
       method: 'get',
-      url: `http://localhost:8000/threads/${threadId}/`,
+      url: `https://bookiwiki.onrender.com/threads/${threadId}/`,
       // headers: {
       //   Authorization: `Token ${userStore.token}`,
       // },
@@ -86,7 +86,7 @@ export const useBookStore = defineStore('book', () => {
   const deleteThread = (threadId) => {
     axios({
       method: 'delete',
-      url: `http://localhost:8000/threads/${threadId}/`,
+      url: `https://bookiwiki.onrender.com/threads/${threadId}/`,
       headers: {
         Authorization: `Token ${userStore.token}`,
       },
@@ -103,7 +103,7 @@ export const useBookStore = defineStore('book', () => {
   const likesThread = (threadId) => {
     axios({
       method: 'post',
-      url: `http://127.0.0.1:8000/threads/${threadId}/likes/`,
+      url: `https://bookiwiki.onrender.com/threads/${threadId}/likes/`,
       headers: {
         Authorization: `Token ${userStore.token}`,
       },
@@ -121,7 +121,7 @@ export const useBookStore = defineStore('book', () => {
     try {
       const response = await axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/threads/',
+        url: 'https://bookiwiki.onrender.com/threads/',
         data: threadData,
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ export const useBookStore = defineStore('book', () => {
   const getComments = (threadId) => {
     return axios({
       method: 'get',
-      url: `http://localhost:8000/threads/${threadId}/comments/`,
+      url: `https://bookiwiki.onrender.com/threads/${threadId}/comments/`,
     })
       .then((response) => {
         comments.value = response.data
@@ -153,7 +153,7 @@ export const useBookStore = defineStore('book', () => {
   const createComment = (threadId, content) => {
     return axios({
       method: 'post',
-      url: `http://localhost:8000/threads/${threadId}/comments/`,
+      url: `https://bookiwiki.onrender.com/threads/${threadId}/comments/`,
       data: { content },
       headers: {
         Authorization: `Token ${userStore.token}`,
@@ -172,7 +172,7 @@ export const useBookStore = defineStore('book', () => {
   const updateComment = (commentId, content) => {
     return axios({
       method: 'put',
-      url: `http://localhost:8000/comments/${commentId}/`,
+      url: `https://bookiwiki.onrender.com/comments/${commentId}/`,
       data: { content },
       headers: {
         Authorization: `Token ${userStore.token}`,
@@ -196,7 +196,7 @@ export const useBookStore = defineStore('book', () => {
   const deleteComment = (commentId) => {
     return axios({
       method: 'delete',
-      url: `http://localhost:8000/comments/${commentId}/`,
+      url: `https://bookiwiki.onrender.com/comments/${commentId}/`,
       headers: {
         Authorization: `Token ${userStore.token}`,
       },
@@ -216,7 +216,7 @@ export const useBookStore = defineStore('book', () => {
   const updateThread = (threadId, threadData) => {
     return axios({
       method: 'put',
-      url: `http://localhost:8000/threads/${threadId}/`,
+      url: `https://bookiwiki.onrender.com/threads/${threadId}/`,
       data: threadData,
       headers: {
         Authorization: `Token ${userStore.token}`,
