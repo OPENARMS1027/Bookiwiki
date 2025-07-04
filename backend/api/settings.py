@@ -83,7 +83,11 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-ALLOWED_HOSTS = ['bookiwiki.onrender.com']
+ALLOWED_HOSTS = [
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 CORS_ALLOWED_ORIGINS = [
