@@ -46,29 +46,29 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
-import { useUserStore } from "@/stores/user";
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+import { useUserStore } from '@/stores/user'
 
-const router = useRouter();
-const userStore = useUserStore();
+const router = useRouter()
+const userStore = useUserStore()
 
 const passwordData = ref({
-  old_password: "",
-  new_password1: "",
-  new_password2: "",
-});
+  old_password: '',
+  new_password1: '',
+  new_password2: '',
+})
 
 const changePassword = async () => {
   if (passwordData.value.new_password1 !== passwordData.value.new_password2) {
-    alert("새 비밀번호가 일치하지 않습니다.");
-    return;
+    alert('새 비밀번호가 일치하지 않습니다.')
+    return
   }
 
   try {
     await axios.post(
-      "http://127.0.0.1:8000/accounts/password/change/",
+      'https://bookiwiki.onrender.com/accounts/password/change/',
       {
         old_password: passwordData.value.old_password,
         new_password1: passwordData.value.new_password1,
@@ -79,30 +79,30 @@ const changePassword = async () => {
           Authorization: `Token ${userStore.token}`,
         },
       }
-    );
-    alert("비밀번호가 성공적으로 변경되었습니다.");
-    router.push("/mypage");
+    )
+    alert('비밀번호가 성공적으로 변경되었습니다.')
+    router.push('/mypage')
   } catch (error) {
     if (error.response) {
       if (error.response.data.old_password) {
-        alert("현재 비밀번호가 올바르지 않습니다.");
+        alert('현재 비밀번호가 올바르지 않습니다.')
       } else if (error.response.data.new_password1) {
-        alert(error.response.data.new_password1[0]);
+        alert(error.response.data.new_password1[0])
       } else if (error.response.data.new_password2) {
-        alert(error.response.data.new_password2[0]);
+        alert(error.response.data.new_password2[0])
       } else {
-        alert("비밀번호 변경에 실패했습니다. 입력한 정보를 확인해주세요.");
+        alert('비밀번호 변경에 실패했습니다. 입력한 정보를 확인해주세요.')
       }
     } else {
-      alert("서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      alert('서버와의 통신에 실패했습니다. 잠시 후 다시 시도해주세요.')
     }
-    console.error(error);
+    console.error(error)
   }
-};
+}
 
 const goBack = () => {
-  router.push("/mypage");
-};
+  router.push('/mypage')
+}
 </script>
 
 <style scoped>

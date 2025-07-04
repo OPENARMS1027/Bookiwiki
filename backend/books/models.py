@@ -19,7 +19,6 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     pub_date = models.DateField()
     best_rank = models.PositiveIntegerField()
-    # audio_url = models.URLField(blank=True, null=True) 
 
 class Thread(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)

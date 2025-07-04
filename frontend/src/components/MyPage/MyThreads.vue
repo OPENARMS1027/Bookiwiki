@@ -59,11 +59,14 @@ const error = ref(null)
 const fetchMyThreads = async () => {
   try {
     loading.value = true
-    const response = await axios.get('http://127.0.0.1:8000/my-threads/', {
-      headers: {
-        Authorization: `Token ${userStore.token}`,
-      },
-    })
+    const response = await axios.get(
+      'https://bookiwiki.onrender.com/my-threads/',
+      {
+        headers: {
+          Authorization: `Token ${userStore.token}`,
+        },
+      }
+    )
     if (response.data) {
       threads.value = response.data
     }
