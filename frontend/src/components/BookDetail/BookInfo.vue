@@ -59,7 +59,7 @@ const checkIfInLibrary = async () => {
 
   try {
     const response = await axios.get(
-      `https://bookiwiki.onrender.com/userbooks/check/${props.book.id}/`,
+      `https://bookiwiki.onrender.com/books/${props.book.id}/`,
       {
         headers: {
           Authorization: `Token ${userStore.token}`,
@@ -86,19 +86,16 @@ const handleLibraryAction = async (bookId) => {
 
   try {
     if (isInLibrary.value) {
-      await axios.delete(
-        `https://bookiwiki.onrender.com/userbooks/${bookId}/`,
-        {
-          headers: {
-            Authorization: `Token ${userStore.token}`,
-          },
-        }
-      )
+      await axios.delete(`https://bookiwiki.onrender.com/books${bookId}/`, {
+        headers: {
+          Authorization: `Token ${userStore.token}`,
+        },
+      })
       isInLibrary.value = false
       alert('서재에서 제거되었습니다')
     } else {
       await axios.post(
-        'https://bookiwiki.onrender.com/userbooks/',
+        'https://bookiwiki.onrender.com/books/',
         {
           book_id: bookId,
         },
