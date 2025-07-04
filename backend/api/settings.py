@@ -31,9 +31,9 @@ SUPABASE_PASSWORD = os.getenv('SUPABASE_PASSWORD')
 SECRET_KEY = 'django-insecure-%c@pmw2wlh^^x53r+0pd@)n%2@qjw%jrlheo52!vh!p^8=at9x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bookiwiki.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
