@@ -5,9 +5,9 @@
       <form @submit.prevent="onSignUp" enctype="multipart/form-data">
         <div class="form-group">
           <label for="username">아이디</label>
-          <input 
-            type="text" 
-            id="username" 
+          <input
+            type="text"
+            id="username"
             v-model="username"
             placeholder="사용하실 아이디를 입력하세요"
             required
@@ -16,9 +16,9 @@
 
         <div class="form-group">
           <label for="password1">비밀번호</label>
-          <input 
-            type="password" 
-            id="password1" 
+          <input
+            type="password"
+            id="password1"
             v-model="password1"
             placeholder="비밀번호를 입력하세요"
             required
@@ -27,9 +27,9 @@
 
         <div class="form-group">
           <label for="password2">비밀번호 확인</label>
-          <input 
-            type="password" 
-            id="password2" 
+          <input
+            type="password"
+            id="password2"
             v-model="password2"
             placeholder="비밀번호를 다시 입력하세요"
             required
@@ -48,9 +48,9 @@
 
           <div class="form-group half">
             <label for="age">나이</label>
-            <input 
-              type="number" 
-              id="age" 
+            <input
+              type="number"
+              id="age"
               v-model="age"
               placeholder="나이를 입력하세요"
             />
@@ -60,7 +60,11 @@
         <div class="form-group">
           <label>관심 카테고리</label>
           <div class="category-grid">
-            <div v-for="category in categories" :key="category.id" class="category-item">
+            <div
+              v-for="category in categories"
+              :key="category.id"
+              class="category-item"
+            >
               <input
                 type="checkbox"
                 :id="'category-' + category.id"
@@ -78,9 +82,9 @@
         <div class="form-row">
           <div class="form-group half">
             <label for="week_avg_time">주간 평균 독서 시간</label>
-            <input 
-              type="number" 
-              id="week_avg_time" 
+            <input
+              type="number"
+              id="week_avg_time"
               v-model="week_avg_time"
               placeholder="시간 단위로 입력"
             />
@@ -88,9 +92,9 @@
 
           <div class="form-group half">
             <label for="year_avg_time">연간 평균 독서 시간</label>
-            <input 
-              type="number" 
-              id="year_avg_time" 
+            <input
+              type="number"
+              id="year_avg_time"
               v-model="year_avg_time"
               placeholder="시간 단위로 입력"
             />
@@ -100,9 +104,9 @@
         <div class="form-group">
           <label for="profile_img">프로필 이미지</label>
           <div class="file-input-wrapper">
-            <input 
-              type="file" 
-              id="profile_img" 
+            <input
+              type="file"
+              id="profile_img"
               @change="onFileChange"
               class="file-input"
             />
@@ -110,13 +114,16 @@
               <font-awesome-icon :icon="['fas', 'upload']" />
               이미지 선택
             </label>
-            <span v-if="profile_img" class="file-name">{{ profile_img.name }}</span>
+            <span v-if="profile_img" class="file-name">{{
+              profile_img.name
+            }}</span>
           </div>
         </div>
 
         <button type="submit" class="signup-button">회원가입</button>
         <div class="login-link">
-          이미 계정이 있으신가요? <RouterLink :to="{ name: 'login' }">로그인</RouterLink>
+          이미 계정이 있으신가요?
+          <RouterLink :to="{ name: 'login' }">로그인</RouterLink>
         </div>
       </form>
     </div>
@@ -207,7 +214,7 @@ const onSignUp = async () => {
   try {
     const response = await axios({
       method: 'post',
-      url: 'http://127.0.0.1:8000/accounts/signup/',
+      url: 'https://bookiwiki.onrender.com/accounts/signup/',
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -248,7 +255,11 @@ onMounted(async () => {
   align-items: center;
   min-height: 100vh;
   padding: 3rem 2rem;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.1) 0%,
+    rgba(76, 175, 80, 0.05) 100%
+  );
 }
 
 .signup-form {
@@ -303,7 +314,7 @@ label {
   font-size: 1.1rem;
 }
 
-input:not([type="file"]),
+input:not([type='file']),
 select {
   width: 100%;
   padding: 1rem;
@@ -314,10 +325,10 @@ select {
   background: rgba(76, 175, 80, 0.02);
 }
 
-input:not([type="file"]):focus,
+input:not([type='file']):focus,
 select:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #4caf50;
   box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
 }
 
@@ -355,9 +366,9 @@ input::placeholder {
 }
 
 .category-checkbox:checked + .category-label {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 .file-input-wrapper {
@@ -375,7 +386,7 @@ input::placeholder {
   align-items: center;
   gap: 0.5rem;
   padding: 0.8rem 1.5rem;
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -398,7 +409,7 @@ input::placeholder {
 .signup-button {
   width: 100%;
   padding: 1rem;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 8px;
@@ -423,7 +434,7 @@ input::placeholder {
 }
 
 .login-link a {
-  color: #4CAF50;
+  color: #4caf50;
   text-decoration: none;
   font-weight: 600;
   margin-left: 0.5rem;
@@ -437,7 +448,7 @@ input::placeholder {
   left: 0;
   width: 100%;
   height: 2px;
-  background: #4CAF50;
+  background: #4caf50;
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -486,4 +497,5 @@ input::placeholder {
   .file-name {
     margin-top: 0.5rem;
   }
-}</style>
+}
+</style>

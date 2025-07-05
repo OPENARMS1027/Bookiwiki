@@ -21,6 +21,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ALADIN_TTBKEY = os.getenv('ALADIN_TTBKEY')
+SUPABASE_USER = os.getenv('SUPABASE_USER')
+SUPABASE_PASSWORD = os.getenv('SUPABASE_PASSWORD')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -29,9 +31,9 @@ ALADIN_TTBKEY = os.getenv('ALADIN_TTBKEY')
 SECRET_KEY = 'django-insecure-%c@pmw2wlh^^x53r+0pd@)n%2@qjw%jrlheo52!vh!p^8=at9x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bookiwiki.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -81,9 +83,17 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+ALLOWED_HOSTS = [
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
+
+
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'http://localhost:5173',
+    'https://bookiwiki.vercel.app',
 ]
 
 
@@ -112,9 +122,16 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": SUPABASE_USER,
+        "PASSWORD": SUPABASE_PASSWORD,
+        "HOST": "aws-0-ap-northeast-2.pooler.supabase.com",
+        "PORT": "5432",
+        "OPTIONS" : {
+            'sslmode' : 'require'
+        }
     }
 }
 

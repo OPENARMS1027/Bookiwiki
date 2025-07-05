@@ -11,7 +11,7 @@
           @click="handleLibraryAction(book.id)"
         >
           <i :class="isInLibrary ? 'far fa-bookmark' : 'fas fa-bookmark'"></i>
-          {{ isInLibrary ? "내 서재에 담김" : "내 서재에 담기" }}
+          {{ isInLibrary ? '내 서재에 담김' : '내 서재에 담기' }}
         </button>
         <button class="thread-button" @click="moveToThread(book.id)">
           <i class="fas fa-pen"></i> 스레드 작성
@@ -40,62 +40,62 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores/user";
-import axios from "axios";
+import { ref, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import axios from 'axios'
 
 const props = defineProps({
   book: Object,
-});
+})
 
-const router = useRouter();
-const userStore = useUserStore();
-const isInLibrary = ref(false);
+const router = useRouter()
+const userStore = useUserStore()
+const isInLibrary = ref(false)
 
 // 서재에 있는지 확인
 const checkIfInLibrary = async () => {
-  if (!userStore.isLogin || !props.book) return;
+  if (!userStore.isLogin || !props.book) return
 
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/userbooks/check/${props.book.id}/`,
+      `https://bookiwiki.onrender.com/books/${props.book.id}/`,
       {
         headers: {
           Authorization: `Token ${userStore.token}`,
         },
       }
-    );
-    isInLibrary.value = response.data.is_in_library;
+    )
+    isInLibrary.value = response.data.is_in_library
   } catch (error) {
-    console.error("서재 확인 실패:", error);
-    isInLibrary.value = false;
+    console.error('서재 확인 실패:', error)
+    isInLibrary.value = false
   }
-};
+}
 
 // 서재 담기, 빼기
 const handleLibraryAction = async (bookId) => {
   if (!userStore.isLogin) {
-    alert("로그인이 필요한 서비스입니다.");
+    alert('로그인이 필요한 서비스입니다.')
     router.push({
-      name: "login",
+      name: 'login',
       query: { redirect: router.currentRoute.value.fullPath },
-    });
-    return;
+    })
+    return
   }
 
   try {
     if (isInLibrary.value) {
-      await axios.delete(`http://127.0.0.1:8000/userbooks/${bookId}/`, {
+      await axios.delete(`https://bookiwiki.onrender.com/books${bookId}/`, {
         headers: {
           Authorization: `Token ${userStore.token}`,
         },
-      });
-      isInLibrary.value = false;
-      alert("서재에서 제거되었습니다");
+      })
+      isInLibrary.value = false
+      alert('서재에서 제거되었습니다')
     } else {
       await axios.post(
-        "http://127.0.0.1:8000/userbooks/",
+        'https://bookiwiki.onrender.com/books/',
         {
           book_id: bookId,
         },
@@ -104,63 +104,63 @@ const handleLibraryAction = async (bookId) => {
             Authorization: `Token ${userStore.token}`,
           },
         }
-      );
-      isInLibrary.value = true;
-      alert("내 서재에 저장되었습니다");
+      )
+      isInLibrary.value = true
+      alert('내 서재에 저장되었습니다')
     }
   } catch (error) {
     if (
       error.response?.status === 400 &&
-      error.response?.data?.message === "already_exists"
+      error.response?.data?.message === 'already_exists'
     ) {
-      alert("이미 서재에 존재하는 책입니다");
-      isInLibrary.value = true;
+      alert('이미 서재에 존재하는 책입니다')
+      isInLibrary.value = true
     } else {
-      console.error("서재 작업 실패:", error);
-      alert("작업에 실패했습니다");
+      console.error('서재 작업 실패:', error)
+      alert('작업에 실패했습니다')
     }
   }
-};
+}
 
 // book prop이 변경될 때마다 서재 상태 확인
 watch(
   () => props.book,
   (newBook) => {
     if (newBook) {
-      checkIfInLibrary();
+      checkIfInLibrary()
     }
   },
   { immediate: true }
-);
+)
 
 // 로그인 상태가 변경될 때마다 서재 상태 확인
 watch(
   () => userStore.isLogin,
   (newLoginState) => {
     if (newLoginState && props.book) {
-      checkIfInLibrary();
+      checkIfInLibrary()
     } else {
-      isInLibrary.value = false;
+      isInLibrary.value = false
     }
   }
-);
+)
 
 // 스레드 생성 페이지 이동
 const moveToThread = (bookId) => {
   if (!userStore.isLogin) {
-    alert("로그인이 필요한 서비스입니다.");
+    alert('로그인이 필요한 서비스입니다.')
     router.push({
-      name: "login",
+      name: 'login',
       query: { redirect: router.currentRoute.value.fullPath },
-    });
-    return;
+    })
+    return
   }
-  router.push({ name: "threadForm", params: { bookId: bookId } });
-};
+  router.push({ name: 'threadForm', params: { bookId: bookId } })
+}
 
 onMounted(() => {
-  checkIfInLibrary();
-});
+  checkIfInLibrary()
+})
 </script>
 
 <style scoped>
